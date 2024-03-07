@@ -5,56 +5,31 @@ var categories = [
   CategoryModel(
     categoryName: 'Кофе',
     products: [
-      const ProductInfoModel(
-          name: 'Олеато', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато2', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато3', price: 139),
+      const ProductInfoModel(name: 'Олеато', price: 139),
+      const ProductInfoModel(name: 'Капучино', price: 129),
+      const ProductInfoModel(name: 'Эспрессо', price: 119),
     ],
   ),
   CategoryModel(
     categoryName: 'Чай',
     products: [
-      const ProductInfoModel(
-          name: 'Олеато4', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато5', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато6', price: 139),
+      const ProductInfoModel(name: 'Липтон', price: 139),
+      const ProductInfoModel(name: 'Гринфилд', price: 89),
     ],
   ),
   CategoryModel(
-    categoryName: 'Молоко',
+    categoryName: 'Холодный кофе',
     products: [
-      const ProductInfoModel(
-          name: 'Олеато7', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато8', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато9', price: 139),
+      const ProductInfoModel(name: 'Айс латте', price: 159),
+      const ProductInfoModel(name: 'Айсмэн', price: 169),
     ],
   ),
   CategoryModel(
-    categoryName: 'Вода',
+    categoryName: 'Рафы',
     products: [
-      const ProductInfoModel(
-          name: 'Олеато10', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато11', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато12', price: 139),
-    ],
-  ),
-  CategoryModel(
-    categoryName: 'Алкоголь',
-    products: [
-      const ProductInfoModel(
-          name: 'Олеато13', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато14', price: 139),
-      const ProductInfoModel(
-          name: 'Олеато15', price: 139),
+      const ProductInfoModel(name: 'Авторский', price: 209),
+      const ProductInfoModel(name: 'Classic', price: 219),
+      const ProductInfoModel(name: 'Медовый', price: 229),
     ],
   ),
 ];

@@ -16,49 +16,29 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   late Map<String, GlobalKey> categoryKeys;
   late String selectedCategoryName;
-  late ItemScrollController _menuController;
-  late ItemScrollController _appBarController;
-  bool inProgress = false;
+  final ItemScrollController _menuController = ItemScrollController();
+  final ItemScrollController _appBarController = ItemScrollController();
   late ItemPositionsListener itemListener;
+  int current = 0;
+  bool inProgress = false;
+  bool scrolledToBottom = false;
 
   @override
   void initState() {
     super.initState();
-    _menuController = ItemScrollController();
-    _appBarController = ItemScrollController();
     itemListener = ItemPositionsListener.create();
-
-    bool scrolledToBottom = false;
 
     categoryKeys = {
       for (var category in widget.categories) category.categoryName: GlobalKey()
     };
 
-    selectedCategoryName = widget.categories.first.categoryName;
     itemListener.itemPositions.addListener(() {
       final fullVisible = itemListener.itemPositions.value
           .where((item) {
-            final isTopVisible = item.itemLeadingEdge >= 0;
-            final isBottomVisible = item.itemTrailingEdge < 1.02;
-            return isTopVisible && isBottomVisible;
+            return item.itemLeadingEdge >= 0;
           })
           .map((item) => item.index)
           .toList();
-
-      if (fullVisible.length == 2) {
-        if ((fullVisible[1] == widget.categories.length - 1) &&
-            inProgress != true) {
-          if (fullVisible[1] != current) {
-            scrolledToBottom = true;
-            setCurrent(fullVisible[1]);
-            appBarScrollToCategory(fullVisible[1]);
-          }
-        } else {
-          scrolledToBottom = false;
-        }
-      } else {
-        scrolledToBottom = false;
-      }
 
       if (((fullVisible[0] != current) && inProgress != true) &&
           scrolledToBottom == false) {
@@ -68,7 +48,6 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
-  int current = 0;
   void setCurrent(int newCurrent) {
     setState(() {
       current = newCurrent;
@@ -85,7 +64,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
   appBarScrollToCategory(int ind) async {
     _appBarController.scrollTo(
-        index: ind, duration: const Duration(milliseconds: 120));
+      curve: Curves.easeOut,
+      opacityAnimationWeights: [20,20,60],
+        index: ind,
+        duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -109,9 +91,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     padding: const EdgeInsets.all(4),
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          selectedCategoryName = category.categoryName;
-                        });
                         setCurrent(index);
                         menuScrollToCategory(index);
                         appBarScrollToCategory(index);
@@ -120,7 +99,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
-                            return selectedCategoryName == category.categoryName
+                            return index == current
                                 ? AppColors.lightblue
                                 : AppColors.white;
                           },
@@ -128,7 +107,10 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       child: Text(
                         category.categoryName,
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: index == current
+                                ? AppColors.white
+                                : AppColors.black),
                       ),
                     ),
                   );
@@ -142,6 +124,7 @@ class _MenuScreenState extends State<MenuScreen> {
           child: ScrollablePositionedList.builder(
             shrinkWrap: true,
             itemScrollController: _menuController,
+            itemPositionsListener: itemListener,
             itemBuilder: (context, index) {
               final category = widget.categories[index];
               return CategorySection(

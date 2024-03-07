@@ -53,52 +53,74 @@ class _ProductCardState extends State<ProductCard> {
                   height: 24,
                   child: showQuantityButtons()
                       ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: 24,
-                              child: IconButton.filled(
-                                onPressed: () {
-                                  setState(() {
-                                    _quantity--;
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.remove,
-                                  size: 9,
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                    shape: CircleBorder(),
+                                    color: AppColors.lightblue),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _quantity--;
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.remove,
+                                    size: 9,
+                                  ),
+                                  color: AppColors.white,
                                 ),
-                                color: AppColors.lightblue,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 52),
-                                child: FilledButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    '$_quantity',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                            Expanded(
+                              child: Padding(
+                                padding: MediaQuery.sizeOf(context).width > 450
+                                    ? const EdgeInsets.symmetric(horizontal: 8)
+                                    : const EdgeInsets.symmetric(horizontal: 2),
+                                child: SizedBox(
+                                  height: 24,
+                                  child: DecoratedBox(
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(16),
+                                      ),
+                                      color: AppColors.lightblue,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '$_quantity',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(
                               width: 24,
-                              child: IconButton.filled(
-                                onPressed: () {
-                                  setState(() {
-                                    if (_quantity < 10) {
-                                      _quantity++;
-                                    }
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.add,
-                                  size: 9,
-                                  color: AppColors.lightblue,
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                    shape: CircleBorder(),
+                                    color: AppColors.lightblue),
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (_quantity < 10) {
+                                        _quantity++;
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 9,
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
                             ),

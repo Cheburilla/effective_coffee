@@ -20,20 +20,19 @@ class CategorySection extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        Flexible(
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16.0,
-              crossAxisSpacing: 16.0,
-              mainAxisExtent: 196,
-            ),
-            itemCount: category.products.length,
-            itemBuilder: (context, index) {
-              return ProductCard(product: category.products[index]);
-            },
+        GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16.0,
+            crossAxisSpacing: 16.0,
+            mainAxisExtent: 196,
           ),
+          itemCount: category.products.length,
+          itemBuilder: (context, index) {
+            return ProductCard(product: category.products[index]);
+          },
         ),
       ],
     );

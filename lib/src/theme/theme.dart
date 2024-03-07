@@ -37,6 +37,13 @@ final theme = ThemeData(
         height: 1.33,
         letterSpacing: 0.4,
         color: AppColors.white),
+    labelSmall: TextStyle(
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w400,
+        fontSize: 10,
+        height: 1,
+        letterSpacing: 0.4,
+        color: AppColors.white),
   ),
   filledButtonTheme: const FilledButtonThemeData(
     style: ButtonStyle(
