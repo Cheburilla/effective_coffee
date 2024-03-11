@@ -10,7 +10,7 @@ class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key, required this.categories});
 
   @override
-  _MenuScreenState createState() => _MenuScreenState();
+  State<MenuScreen> createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
@@ -33,17 +33,14 @@ class _MenuScreenState extends State<MenuScreen> {
     };
 
     itemListener.itemPositions.addListener(() {
-      final fullVisible = itemListener.itemPositions.value
-          .where((item) {
-            return item.itemLeadingEdge >= 0;
-          })
-          .map((item) => item.index)
-          .toList();
+      final fullVisible = itemListener.itemPositions.value.firstWhere((item) {
+        return item.itemLeadingEdge >= 0;
+      }).index;
 
-      if (((fullVisible[0] != current) && inProgress != true) &&
+      if (((fullVisible != current) && inProgress != true) &&
           scrolledToBottom == false) {
-        setCurrent(fullVisible[0]);
-        appBarScrollToCategory(fullVisible[0]);
+        setCurrent(fullVisible);
+        appBarScrollToCategory(fullVisible);
       }
     });
   }
@@ -54,7 +51,7 @@ class _MenuScreenState extends State<MenuScreen> {
     });
   }
 
-  menuScrollToCategory(int ind) async {
+  void menuScrollToCategory(int ind) async {
     inProgress = true;
     _menuController.scrollTo(
         index: ind, duration: const Duration(milliseconds: 200));
@@ -62,10 +59,10 @@ class _MenuScreenState extends State<MenuScreen> {
     inProgress = false;
   }
 
-  appBarScrollToCategory(int ind) async {
+  void appBarScrollToCategory(int ind) async {
     _appBarController.scrollTo(
-      curve: Curves.easeOut,
-      opacityAnimationWeights: [20,20,60],
+        curve: Curves.easeOut,
+        opacityAnimationWeights: [20, 20, 60],
         index: ind,
         duration: const Duration(milliseconds: 300));
   }
@@ -81,7 +78,6 @@ class _MenuScreenState extends State<MenuScreen> {
             child: SizedBox(
               height: 40,
               child: ScrollablePositionedList.builder(
-                shrinkWrap: true,
                 itemScrollController: _appBarController,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.categories.length,
@@ -95,16 +91,10 @@ class _MenuScreenState extends State<MenuScreen> {
                         menuScrollToCategory(index);
                         appBarScrollToCategory(index);
                       },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            return index == current
-                                ? AppColors.lightblue
-                                : AppColors.white;
-                          },
-                        ),
-                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: index == current
+                              ? AppColors.lightblue
+                              : AppColors.white),
                       child: Text(
                         category.categoryName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -122,7 +112,6 @@ class _MenuScreenState extends State<MenuScreen> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ScrollablePositionedList.builder(
-            shrinkWrap: true,
             itemScrollController: _menuController,
             itemPositionsListener: itemListener,
             itemBuilder: (context, index) {

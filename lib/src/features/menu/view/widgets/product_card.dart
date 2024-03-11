@@ -9,14 +9,11 @@ class ProductCard extends StatefulWidget {
   const ProductCard({super.key, required this.product});
 
   @override
-  _ProductCardState createState() => _ProductCardState();
+  State<ProductCard> createState() => _ProductCardState();
 }
 
 class _ProductCardState extends State<ProductCard> {
-  bool showQuantityButtons() {
-    if (_quantity > 0) return true;
-    return false;
-  }
+  bool get showQuantityButtons => _quantity > 0;
 
   int _quantity = 0;
   @override
@@ -30,15 +27,12 @@ class _ProductCardState extends State<ProductCard> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
-                child: widget.product.imagePath != null
-                    ? ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 100),
-                        child: Image.network(widget.product.imagePath!),
-                      )
-                    : ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 100),
-                        child: Image.asset(ImageSources.placeholder),
-                      ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 100),
+                  child: widget.product.imagePath != null
+                      ? Image.network(widget.product.imagePath!)
+                      : Image.asset(ImageSources.placeholder),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -51,7 +45,7 @@ class _ProductCardState extends State<ProductCard> {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: SizedBox(
                   height: 24,
-                  child: showQuantityButtons()
+                  child: showQuantityButtons
                       ? Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

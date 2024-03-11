@@ -19,7 +19,7 @@ class CoffeeShopApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.title,
       theme: theme,
-      home: Center(
+      home: const Center(
         child: MenuScreen(categories: categories),
       ),
     );

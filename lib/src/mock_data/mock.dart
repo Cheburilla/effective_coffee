@@ -1,35 +1,35 @@
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
 import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 
-var categories = [
+const categories = [
   CategoryModel(
     categoryName: 'Кофе',
     products: [
-      const ProductInfoModel(name: 'Олеато', price: 139),
-      const ProductInfoModel(name: 'Капучино', price: 129),
-      const ProductInfoModel(name: 'Эспрессо', price: 119),
+      ProductInfoModel(name: 'Олеато', price: 139),
+      ProductInfoModel(name: 'Капучино', price: 129),
+      ProductInfoModel(name: 'Эспрессо', price: 119),
     ],
   ),
   CategoryModel(
     categoryName: 'Чай',
     products: [
-      const ProductInfoModel(name: 'Липтон', price: 139),
-      const ProductInfoModel(name: 'Гринфилд', price: 89),
+      ProductInfoModel(name: 'Липтон', price: 139),
+      ProductInfoModel(name: 'Гринфилд', price: 89),
     ],
   ),
   CategoryModel(
     categoryName: 'Холодный кофе',
     products: [
-      const ProductInfoModel(name: 'Айс латте', price: 159),
-      const ProductInfoModel(name: 'Айсмэн', price: 169),
+      ProductInfoModel(name: 'Айс латте', price: 159),
+      ProductInfoModel(name: 'Айсмэн', price: 169),
     ],
   ),
   CategoryModel(
     categoryName: 'Рафы',
     products: [
-      const ProductInfoModel(name: 'Авторский', price: 209),
-      const ProductInfoModel(name: 'Classic', price: 219),
-      const ProductInfoModel(name: 'Медовый', price: 229),
+      ProductInfoModel(name: 'Авторский', price: 209),
+      ProductInfoModel(name: 'Classic', price: 219),
+      ProductInfoModel(name: 'Медовый', price: 229),
     ],
   ),
 ];

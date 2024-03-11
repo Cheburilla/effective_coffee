@@ -4,7 +4,7 @@ class CategoryModel {
   final String categoryName;
   final List<ProductInfoModel> products;
 
-  CategoryModel({
+  const CategoryModel({
     required this.categoryName,
     required this.products,
   });
