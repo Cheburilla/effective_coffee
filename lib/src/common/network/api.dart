@@ -13,21 +13,21 @@ class EffectiveAcademyApi {
     );
   }
 
-  Uri locations(int? page, int? limit) {
+  Uri locations({int? page, int? limit}) {
     return _buildUri(
       endpoint: 'locations',
       parametersBuilder: () => queryParams(page, limit),
     );
   }
 
-  Uri categories(int? page, int? limit) {
+  Uri categories({int? page, int? limit}) {
     return _buildUri(
       endpoint: 'products/categories',
       parametersBuilder: () => queryParams(page, limit),
     );
   }
 
-  Uri products(int? page, int? limit) {
+  Uri products({int? page, int? limit}) {
     return _buildUri(
       endpoint: 'products',
       parametersBuilder: () => queryParams(page, limit),
