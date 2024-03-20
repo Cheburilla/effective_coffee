@@ -17,4 +17,5 @@ class ProductInfoModel {
     );
   }
 
+  static fromJson(data) {}
 }

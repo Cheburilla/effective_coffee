@@ -23,6 +23,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } else {
       items.addAll({newItem: 1});
     }
+    items.update(
+      newItem,
+      (value) => value + 1,
+      ifAbsent: () => 1,
+    );
     emit(state.copyWith(status: CartStatus.filled, cartItems: items));
   }
 

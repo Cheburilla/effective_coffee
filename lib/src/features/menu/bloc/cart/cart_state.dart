@@ -1,8 +1,8 @@
 part of 'cart_bloc.dart';
 
-enum CartStatus {empty, filled}
+enum CartStatus { empty, filled }
 
-final class CartState extends Equatable{
+final class CartState extends Equatable {
   final Map<int, int> cartItems;
   final CartStatus status;
 

@@ -15,4 +15,6 @@ class CategoryModel {
       products: json['products'],
     );
   }
+
+  static fromJson(i) {}
 }
