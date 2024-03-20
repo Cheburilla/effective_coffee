@@ -7,8 +7,9 @@ import 'package:effective_coffee/src/features/menu/models/category_model.dart';
 import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 
 abstract class MenuRepository {
-  Future<List<CategoryModel>> getCategories();
-  Future<ProductInfoModel> getProductInfo(String id);
+  Future<List<CategoryModel>> getCategories({int? page, int? limit});
+  Future<ProductInfoModel> getProductInfo(int id);
+  Future<void> postOrder(Map<int, int> items);
 }
 
 class DioMenuRepository implements MenuRepository {
@@ -17,10 +18,18 @@ class DioMenuRepository implements MenuRepository {
   final Dio client;
 
   @override
-  Future<List<CategoryModel>> getCategories() {
-    // TODO: implement getProductInfo
-    throw UnimplementedError();
-  }
+  Future<List<CategoryModel>> getCategories({int? page, int? limit}) =>
+      _getData(
+          uri: api.categories(page: page, limit: limit),
+          builder: (data) => (data as List)
+              .map<CategoryModel>((i) => CategoryModel.fromJson(i))
+              .toList());
+
+  @override
+  Future<ProductInfoModel> getProductInfo(int id) => _getData(
+        uri: api.product(id),
+        builder: (data) => ProductInfoModel.fromJson(data),
+      );
 
   Future<T> _getData<T>({
     required Uri uri,
@@ -41,8 +50,28 @@ class DioMenuRepository implements MenuRepository {
   }
 
   @override
-  Future<ProductInfoModel> getProductInfo(String id) {
-    // TODO: implement getProductInfo
-    throw UnimplementedError();
+  Future<Map<String, String>> postOrder(Map<int, int> items) => _postData(
+        uri: api.order(),
+        builder: (data) => <String, String>{},
+        sendingData: json.encode(items),
+      );
+
+  Future<T> _postData<T>({
+    required Uri uri,
+    required T Function(dynamic data) builder,
+    required String sendingData,
+  }) async {
+    try {
+      final response = await client.post(uri.toString(), data: sendingData);
+      switch (response.statusCode) {
+        case 201:
+          final data = json.decode(response.data);
+          return builder(data);
+        default:
+          throw UnknownException();
+      }
+    } on SocketException catch (_) {
+      throw NoInternetConnectionException();
+    }
   }
 }
