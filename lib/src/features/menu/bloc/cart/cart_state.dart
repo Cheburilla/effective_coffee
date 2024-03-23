@@ -1,19 +1,19 @@
 part of 'cart_bloc.dart';
 
-enum CartStatus { empty, filled }
+enum CartStatus { initial, filled, loading, success, failure }
 
-final class CartState extends Equatable {
-  final Map<int, int> cartItems;
+final class CartState extends Equatable{
+  final Map<ProductInfoModel, int> cartItems;
   final CartStatus status;
 
   const CartState({
-    this.status = CartStatus.empty,
+    this.status = CartStatus.initial,
     required this.cartItems,
   });
 
   CartState copyWith({
     CartStatus? status,
-    Map<int, int>? cartItems,
+    Map<ProductInfoModel, int>? cartItems,
   }) {
     return CartState(
       status: status ?? this.status,
@@ -28,4 +28,5 @@ final class CartState extends Equatable {
 
   @override
   List<Object> get props => [status, cartItems];
+
 }

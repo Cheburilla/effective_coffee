@@ -25,7 +25,7 @@
         manager = "flutter";
       }
       {
-        command = [
+        /*command = [
           "flutter"
           "run"
           "--machine"
@@ -33,7 +33,7 @@
           "android"
           "-d"
           "emulator-5554"
-        ];
+        ];*/
         id = "android";
         manager = "flutter";
       }

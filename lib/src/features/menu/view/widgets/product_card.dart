@@ -1,7 +1,9 @@
+import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:effective_coffee/src/theme/image_sources.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductCard extends StatefulWidget {
   final ProductInfoModel product;
@@ -60,6 +62,7 @@ class _ProductCardState extends State<ProductCard> {
                                   onPressed: () {
                                     setState(() {
                                       _quantity--;
+                                      BlocProvider.of<CartBloc>(context).add(RemoveProduct(widget.product));
                                     });
                                   },
                                   icon: const Icon(
@@ -107,6 +110,7 @@ class _ProductCardState extends State<ProductCard> {
                                     setState(() {
                                       if (_quantity < 10) {
                                         _quantity++;
+                                        BlocProvider.of<CartBloc>(context).add(AddProduct(widget.product));
                                       }
                                     });
                                   },
@@ -124,6 +128,7 @@ class _ProductCardState extends State<ProductCard> {
                           onPressed: () {
                             setState(() {
                               _quantity = 1;
+                              BlocProvider.of<CartBloc>(context).add(AddProduct(widget.product));
                             });
                           },
                           child: Text(

@@ -1,13 +1,11 @@
+import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/category_section.dart';
-import 'package:effective_coffee/src/features/menu/view/widgets/product_card.dart';
-import 'package:effective_coffee/src/mock_data/mock.dart';
+import 'package:effective_coffee/src/features/menu/view/widgets/order_bottomsheet.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuScreen extends StatefulWidget {
   final List<CategoryModel> categories;
@@ -114,62 +112,35 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
           ),
         ),
-        body: BlocListener(
-          bloc: BlocProvider.of<DataBloc>(context),
-          listener: (BuildContext context, DataState state) {
-            if (state is Success) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.orderSuccess),
-                ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ScrollablePositionedList.builder(
+            itemScrollController: _menuController,
+            itemPositionsListener: itemListener,
+            itemBuilder: (context, index) {
+              final category = widget.categories[index];
+              return CategorySection(
+                key: categoryKeys[category.categoryName],
+                category: category,
               );
-            }
-            if (state is Failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.orderFailure),
-                ),
-              );
-            }
-          },
-          child: BlocBuilder(
-            bloc: BlocProvider.of<DataBloc>(context),
-            builder: (BuildContext context, DataState state) {
-              if (state is Initial) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ScrollablePositionedList.builder(
-                    itemScrollController: _menuController,
-                    itemPositionsListener: itemListener,
-                    itemBuilder: (context, index) {
-                      final category = widget.categories[index];
-                      return CategorySection(
-                        key: categoryKeys[category.categoryName],
-                        category: category,
-                      );
-                    },
-                    itemCount: widget.categories.length,
-                  ),
-                );
-              }
-              return const Center();
             },
+            itemCount: widget.categories.length,
           ),
         ),
-        floatingActionButton: BlocBuilder(
-          bloc: BlocProvider.of<DataBloc>(context),
-          builder: (BuildContext context, DataState state) {
-            if (state is Initial) {
+        floatingActionButton: BlocBuilder<CartBloc, CartState>(
+          //bloc: BlocProvider.of<CartBloc>(context),
+          builder: (context, state) {
+            if (state.status == CartStatus.filled) {
               return FloatingActionButton(
                 backgroundColor: AppColors.lightblue,
                 onPressed: () => {
-                  showBottomSheet(
-                    backgroundColor: AppColors.white,
-                    context: context,
-                    builder: (_) => const OrderBottomSheet(
-                      products: [],
-                    ),
-                  ),
+                  showModalBottomSheet(
+                      backgroundColor: AppColors.white,
+                      context: context,
+                      builder: (_) => BlocProvider.value(
+                            value: BlocProvider.of<CartBloc>(context),
+                            child: const OrderBottomSheet(),
+                          ),),
                 },
                 child: const Icon(
                   Icons.local_mall,
@@ -182,64 +153,5 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
     );
-  }
-}
-
-class OrderBottomSheet extends StatelessWidget {
-  final List<CategoryModel> products;
-
-  const OrderBottomSheet({super.key, required this.products});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.yourOrder,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.delete),
-              ),
-            ],
-          ),
-          const Divider(),
-          Expanded(
-            child: ScrollablePositionedList.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) => ProductCard(
-                product: categories[0].products[0],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-@immutable
-abstract class DataEvent {}
-
-@immutable
-abstract class DataState {}
-
-class Initial extends DataState {}
-
-class Loading extends DataState {}
-
-class Success extends DataState {}
-
-class Failure extends DataState {}
-
-class DataBloc extends Bloc<DataEvent, DataState> {
-  DataBloc() : super(Initial()) {
-    on<DataEvent>((event, emit) async {});
   }
 }

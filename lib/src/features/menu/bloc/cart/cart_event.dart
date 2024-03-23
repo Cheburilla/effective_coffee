@@ -1,24 +1,42 @@
 part of 'cart_bloc.dart';
 
 @immutable
-sealed class CartEvent {
+sealed class CartEvent{
   const CartEvent();
 }
 
 class AddProduct extends CartEvent {
-  final int productId;
+  final ProductInfoModel product;
 
-  const AddProduct(this.productId);
+  const AddProduct(this.product);
 
   @override
-  String toString() => 'AddProduct { id: $productId }';
+  String toString() => 'AddProduct { id: ${product.name} }';
+
 }
 
 class RemoveProduct extends CartEvent {
-  final int productId;
+  final ProductInfoModel product;
 
-  const RemoveProduct(this.productId);
+  const RemoveProduct(this.product);
 
   @override
-  String toString() => 'RemoveProduct { id: $productId }';
+  String toString() => 'RemoveProduct { id: ${product.name} }';
+
+}
+
+class PostOrder extends CartEvent {
+  const PostOrder();
+
+  @override
+  String toString() => 'PostOrder';
+
+}
+
+class DeleteOrder extends CartEvent {
+  const DeleteOrder();
+
+  @override
+  String toString() => 'DeleteOrder';
+
 }

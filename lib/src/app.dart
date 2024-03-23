@@ -1,4 +1,5 @@
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
+import 'package:effective_coffee/src/features/menu/data/menu_repository.dart';
 import 'package:effective_coffee/src/features/menu/view/menu_screen.dart';
 import 'package:effective_coffee/src/mock_data/mock.dart';
 import 'package:flutter/material.dart';
@@ -9,30 +10,27 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 class CoffeeShopApp extends StatelessWidget {
   const CoffeeShopApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => DataBloc(),
-        ),
-        BlocProvider(
-          create: (context) => CartBloc(),
-        ),
+    return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      child: MaterialApp(
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+      supportedLocales: AppLocalizations.supportedLocales,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.title,
+      theme: theme,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (context) => CartBloc(context.read<DioMenuRepository>()),
+          ),
         ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.title,
-        theme: theme,
-        home: const Center(
-          child: MenuScreen(categories: categories),
-        ),
+        child: const MenuScreen(categories: categories),
       ),
     );
   }

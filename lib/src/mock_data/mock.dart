@@ -5,31 +5,31 @@ const categories = [
   CategoryModel(
     categoryName: 'Кофе',
     products: [
-      ProductInfoModel(name: 'Олеато', price: 139),
-      ProductInfoModel(name: 'Капучино', price: 129),
-      ProductInfoModel(name: 'Эспрессо', price: 119),
+      ProductInfoModel(id: 1, name: 'Олеато', price: 139),
+      ProductInfoModel(id: 2, name: 'Капучино', price: 129),
+      ProductInfoModel(id: 3, name: 'Эспрессо', price: 119),
     ],
   ),
   CategoryModel(
     categoryName: 'Чай',
     products: [
-      ProductInfoModel(name: 'Липтон', price: 139),
-      ProductInfoModel(name: 'Гринфилд', price: 89),
+      ProductInfoModel(id: 4, name: 'Липтон', price: 139),
+      ProductInfoModel(id: 5, name: 'Гринфилд', price: 89),
     ],
   ),
   CategoryModel(
     categoryName: 'Холодный кофе',
     products: [
-      ProductInfoModel(name: 'Айс латте', price: 159),
-      ProductInfoModel(name: 'Айсмэн', price: 169),
+      ProductInfoModel(id: 6, name: 'Айс латте', price: 159),
+      ProductInfoModel(id: 7, name: 'Айсмэн', price: 169),
     ],
   ),
   CategoryModel(
     categoryName: 'Рафы',
     products: [
-      ProductInfoModel(name: 'Авторский', price: 209),
-      ProductInfoModel(name: 'Classic', price: 219),
-      ProductInfoModel(name: 'Медовый', price: 229),
+      ProductInfoModel(id: 8, name: 'Авторский', price: 209),
+      ProductInfoModel(id: 9, name: 'Classic', price: 219),
+      ProductInfoModel(id: 10, name: 'Медовый', price: 229),
     ],
   ),
 ];

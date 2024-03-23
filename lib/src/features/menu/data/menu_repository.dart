@@ -9,7 +9,7 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 abstract class MenuRepository {
   Future<List<CategoryModel>> getCategories({int? page, int? limit});
   Future<ProductInfoModel> getProductInfo(int id);
-  Future<void> postOrder(Map<int, int> items);
+  Future<void> postOrder(Map<ProductInfoModel, int> items);
 }
 
 class DioMenuRepository implements MenuRepository {
@@ -50,10 +50,10 @@ class DioMenuRepository implements MenuRepository {
   }
 
   @override
-  Future<Map<String, String>> postOrder(Map<int, int> items) => _postData(
+  Future<Map<String, String>> postOrder(Map<ProductInfoModel, int> items) => _postData(
         uri: api.order(),
         builder: (data) => <String, String>{},
-        sendingData: json.encode(items),
+        sendingData: json.encode(items.map((key, value) => MapEntry(key.id, value),)),
       );
 
   Future<T> _postData<T>({
@@ -62,7 +62,8 @@ class DioMenuRepository implements MenuRepository {
     required String sendingData,
   }) async {
     try {
-      final response = await client.post(uri.toString(), data: sendingData);
+      final request = {"positions": sendingData, "token": "<FCM Registration Token>"};
+      final response = await client.post(uri.toString(), data: request);
       switch (response.statusCode) {
         case 201:
           final data = json.decode(response.data);
