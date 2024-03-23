@@ -11,7 +11,7 @@ class AddProduct extends CartEvent {
   const AddProduct(this.product);
 
   @override
-  String toString() => 'AddProduct { id: ${product.name} }';
+  String toString() => 'AddProduct { id: ${product.id} }';
 
 }
 
@@ -21,7 +21,7 @@ class RemoveProduct extends CartEvent {
   const RemoveProduct(this.product);
 
   @override
-  String toString() => 'RemoveProduct { id: ${product.name} }';
+  String toString() => 'RemoveProduct { id: ${product.id} }';
 
 }
 

@@ -21,12 +21,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onAddProduct(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
-    ProductInfoModel newItem = event.product;
-    items.update(
-      newItem,
-      (value) => value + 1,
-      ifAbsent: () => 1,
-    );
+    final count = items[event.product] ?? 0;
+    if (count < 10) {
+      items[event.product] = count + 1;
+    }
     emit(state.copyWith(status: CartStatus.filled, cartItems: items));
   }
 
@@ -36,11 +34,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (items[newItem]! == 1) {
       items.remove(newItem);
     } else {
-      items[newItem] = (items[newItem] as int) - 1;
+      items[newItem] = (items[newItem]! - 1);
     }
-    print(items.length as String);
     if (items.isEmpty) {
-      emit(state.copyWith(status: CartStatus.initial, cartItems: <ProductInfoModel, int>{}));
+      emit(state.copyWith(
+          status: CartStatus.initial, cartItems: <ProductInfoModel, int>{}));
     } else {
       emit(state.copyWith(status: CartStatus.filled, cartItems: items));
     }
@@ -51,14 +49,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       emit(state.copyWith(status: CartStatus.loading));
       await _repository.postOrder(items);
-      emit(state.copyWith(status: CartStatus.success, cartItems: <ProductInfoModel, int>{}));
+      emit(state.copyWith(status: CartStatus.success));
       emit(state.copyWith(status: CartStatus.initial));
     } catch (_) {
       emit(state.copyWith(status: CartStatus.failure, cartItems: items));
+      rethrow;
     }
   }
 
   Future<void> _onDeleteOrder(event, emit) async {
-    emit(state.copyWith(status: CartStatus.initial, cartItems: <ProductInfoModel, int>{}));
+    emit(state.copyWith(
+        status: CartStatus.initial, cartItems: <ProductInfoModel, int>{}));
   }
 }

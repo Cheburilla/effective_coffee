@@ -50,24 +50,27 @@ class DioMenuRepository implements MenuRepository {
   }
 
   @override
-  Future<Map<String, String>> postOrder(Map<ProductInfoModel, int> items) => _postData(
+  Future<bool> postOrder(Map<ProductInfoModel, int> items) =>
+      _postData(
         uri: api.order(),
-        builder: (data) => <String, String>{},
-        sendingData: json.encode(items.map((key, value) => MapEntry(key.id, value),)),
+        sendingData: {"positions" :items.map(
+          (key, value) => MapEntry(key.id.toString(), value),
+        ), "token" : "<FCM Registration Token>"}
       );
 
-  Future<T> _postData<T>({
+  Future<bool> _postData({
     required Uri uri,
-    required T Function(dynamic data) builder,
-    required String sendingData,
+    required Object sendingData,
   }) async {
     try {
-      final request = {"positions": sendingData, "token": "<FCM Registration Token>"};
-      final response = await client.post(uri.toString(), data: request);
+      final request = sendingData;
+      final response = await client.post(
+        uri.toString(),
+        data: json.encode(request),
+      );
       switch (response.statusCode) {
         case 201:
-          final data = json.decode(response.data);
-          return builder(data);
+          return true;
         default:
           throw UnknownException();
       }

@@ -135,12 +135,14 @@ class _MenuScreenState extends State<MenuScreen> {
                 backgroundColor: AppColors.lightblue,
                 onPressed: () => {
                   showModalBottomSheet(
-                      backgroundColor: AppColors.white,
-                      context: context,
-                      builder: (_) => BlocProvider.value(
-                            value: BlocProvider.of<CartBloc>(context),
-                            child: const OrderBottomSheet(),
-                          ),),
+                    isScrollControlled: true,
+                    backgroundColor: AppColors.white,
+                    context: context,
+                    builder: (_) => BlocProvider.value(
+                      value: BlocProvider.of<CartBloc>(context),
+                      child: const OrderBottomSheet(),
+                    ),
+                  ),
                 },
                 child: const Icon(
                   Icons.local_mall,

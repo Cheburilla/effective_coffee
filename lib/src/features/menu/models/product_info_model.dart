@@ -2,13 +2,13 @@ class ProductInfoModel {
   final int id;
   final String name;
   final int price;
-  final String? imagePath;
+  final String imagePath;
 
   const ProductInfoModel({
     required this.id,
     required this.name,
     required this.price,
-    this.imagePath,
+    required this.imagePath,
   });
 
   factory ProductInfoModel.fromJSON(Map<String, dynamic> json) {

@@ -1,23 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
-import 'package:effective_coffee/src/theme/image_sources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   final ProductInfoModel product;
 
   const ProductCard({super.key, required this.product});
 
-  @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  bool get showQuantityButtons => _quantity > 0;
-
-  int _quantity = 0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -31,15 +23,20 @@ class _ProductCardState extends State<ProductCard> {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 100),
-                  child: widget.product.imagePath != null
-                      ? Image.network(widget.product.imagePath!)
-                      : Image.asset(ImageSources.placeholder),
+                  child: CachedNetworkImage(
+                    imageUrl: product.imagePath,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Text(
-                  widget.product.name,
+                  product.name,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -47,7 +44,10 @@ class _ProductCardState extends State<ProductCard> {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: SizedBox(
                   height: 24,
-                  child: showQuantityButtons
+                  child: BlocProvider.of<CartBloc>(context, listen: true)
+                          .state
+                          .cartItems
+                          .containsKey(product)
                       ? Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,10 +60,8 @@ class _ProductCardState extends State<ProductCard> {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      _quantity--;
-                                      BlocProvider.of<CartBloc>(context).add(RemoveProduct(widget.product));
-                                    });
+                                    BlocProvider.of<CartBloc>(context)
+                                        .add(RemoveProduct(product));
                                   },
                                   icon: const Icon(
                                     Icons.remove,
@@ -88,12 +86,15 @@ class _ProductCardState extends State<ProductCard> {
                                       color: AppColors.lightblue,
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        '$_quantity',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall,
-                                      ),
+                                      child: BlocBuilder<CartBloc, CartState>(
+                                          builder: (context, state) {
+                                        return Text(
+                                          '${state.cartItems[product]}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall,
+                                        );
+                                      }),
                                     ),
                                   ),
                                 ),
@@ -107,12 +108,8 @@ class _ProductCardState extends State<ProductCard> {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      if (_quantity < 10) {
-                                        _quantity++;
-                                        BlocProvider.of<CartBloc>(context).add(AddProduct(widget.product));
-                                      }
-                                    });
+                                    BlocProvider.of<CartBloc>(context)
+                                        .add(AddProduct(product));
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -126,13 +123,11 @@ class _ProductCardState extends State<ProductCard> {
                         )
                       : FilledButton(
                           onPressed: () {
-                            setState(() {
-                              _quantity = 1;
-                              BlocProvider.of<CartBloc>(context).add(AddProduct(widget.product));
-                            });
+                            BlocProvider.of<CartBloc>(context)
+                                .add(AddProduct(product));
                           },
                           child: Text(
-                            '${widget.product.price} р.',
+                            '${product.price} р.',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
