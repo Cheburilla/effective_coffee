@@ -130,7 +130,7 @@ class ProductCard extends StatelessWidget {
                                 .add(CartProductAdded(product));
                           },
                           child: Text(
-                            '${product.price} р.',
+                            '${product.price.floor()} р.',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),

@@ -17,8 +17,14 @@ class OrderTile extends StatelessWidget {
         fit: BoxFit.contain,
         width: 55,
       ),
-      title: Text(product.name),
-      trailing: Text("${product.price} р."),
+      title: Text(
+        product.name,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      trailing: Text(
+        "${product.price.floor()} р.",
+        style: Theme.of(context).textTheme.displaySmall,
+      ),
     );
   }
 }

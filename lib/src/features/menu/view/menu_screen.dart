@@ -38,8 +38,8 @@ class _MenuScreenState extends State<MenuScreen> {
             )
             .index;
         if ((fullVisible != current) && inProgress != true) {
-          setCurrent(fullVisible - 1 > -1 ? fullVisible - 1 : 0);
-          appBarScrollToCategory(fullVisible - 1 > -1 ? fullVisible - 1 : 0);
+          setCurrent(fullVisible > 0 ? fullVisible : 0);
+          appBarScrollToCategory(fullVisible > 0 ? fullVisible : 0);
         }
       }
     });
@@ -143,7 +143,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   itemScrollController: _menuController,
                   itemPositionsListener: itemListener,
                   itemBuilder: (context, index) {
-                    if (index % 25 == 10){
+                    if (index % 25 == 10) {
                       context.read<MenuBloc>().add(const PageLoadingStarted());
                     }
                     final category =
@@ -188,10 +188,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   color: AppColors.white,
                 ),
                 label: Text(
-                  BlocProvider.of<CartBloc>(context)
-                      .state
-                      .cost
-                      .toStringAsFixed(2),
+                  '${BlocProvider.of<CartBloc>(context).state.cost.floor()} ₽',
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               );

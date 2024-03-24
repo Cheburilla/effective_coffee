@@ -54,7 +54,7 @@ class OrderBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.yourOrder,
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
                       IconButton(
                         onPressed: () {
@@ -110,7 +110,9 @@ class OrderBottomSheet extends StatelessWidget {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.makeOrder,
-                        style: Theme.of(context).textTheme.labelLarge,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: AppColors.white,
+                            ),
                       ),
                     ),
                   ),

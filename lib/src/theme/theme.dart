@@ -10,6 +10,20 @@ final theme = ThemeData(
     ),
   ),
   textTheme: const TextTheme(
+    displayMedium: TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w700,
+      fontSize: 24,
+      height: 1.33,
+      letterSpacing: 0.25,
+    ),
+    displaySmall: TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w700,
+      fontSize: 16,
+      height: 1.5,
+      letterSpacing: 0.4,
+    ),
     titleLarge: TextStyle(
       fontFamily: 'Roboto',
       fontWeight: FontWeight.w600,
@@ -65,5 +79,12 @@ final theme = ThemeData(
   ),
   snackBarTheme: const SnackBarThemeData(
     backgroundColor: AppColors.snackbar,
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      padding: EdgeInsets.zero,
+      elevation: 0,
+      backgroundColor: AppColors.lightblue,
+    ),
   ),
 );
