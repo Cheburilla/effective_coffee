@@ -9,7 +9,8 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 abstract class MenuRepository {
   Future<List<CategoryModel>> getCategories({int? page, int? limit});
   Future<ProductInfoModel> getProductInfo(int id);
-  Future<List<ProductInfoModel>> getProducts({int? page, int? limit, CategoryModel? category});
+  Future<List<ProductInfoModel>> getProducts(
+      {int? page, int? limit, CategoryModel? category});
   Future<void> postOrder(Map<ProductInfoModel, int> items);
 }
 
@@ -27,7 +28,8 @@ class DioMenuRepository implements MenuRepository {
               .toList());
 
   @override
-  Future<List<ProductInfoModel>> getProducts({int? page, int? limit, CategoryModel? category}) =>
+  Future<List<ProductInfoModel>> getProducts(
+          {int? page, int? limit, CategoryModel? category}) =>
       _getData(
           uri: api.products(page: page, limit: limit, category: category?.id),
           builder: (data) => (data as List)
@@ -48,7 +50,7 @@ class DioMenuRepository implements MenuRepository {
       final response = await client.get(uri.toString());
       switch (response.statusCode) {
         case 200:
-          final data = json.decode(response.data);
+          final data = response.data['data'];
           return builder(data);
         default:
           throw UnknownException();
@@ -60,12 +62,12 @@ class DioMenuRepository implements MenuRepository {
 
   @override
   Future<bool> postOrder(Map<ProductInfoModel, int> items) =>
-      _postData(
-        uri: api.order(),
-        sendingData: {"positions" :items.map(
+      _postData(uri: api.order(), sendingData: {
+        "positions": items.map(
           (key, value) => MapEntry(key.id.toString(), value),
-        ), "token" : "<FCM Registration Token>"}
-      );
+        ),
+        "token": "<FCM Registration Token>"
+      });
 
   Future<bool> _postData({
     required Uri uri,

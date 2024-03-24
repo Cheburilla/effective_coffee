@@ -26,10 +26,20 @@ class CoffeeShopApp extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => CartBloc(context.read<DioMenuRepository>()),
+            create: (context) => CartBloc(
+              context.read<DioMenuRepository>(),
+            ),
           ),
           BlocProvider(
-            create: (context) => MenuBloc(context.read<DioMenuRepository>()),
+            create: (context) => MenuBloc(
+              context.read<DioMenuRepository>(),
+            )
+              ..add(
+                const CategoryLoadingStarted(),
+              )
+              ..add(
+                const PageLoadingStarted(),
+              ),
           ),
         ],
         child: const MenuScreen(),

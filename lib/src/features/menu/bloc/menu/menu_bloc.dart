@@ -6,13 +6,18 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:stream_transform/stream_transform.dart';
+
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
 
+const throttleDuration = Duration(milliseconds: 100);
+
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc(this._repository) : super(const MenuState(status: MenuStatus.idle)) {
-    on<CategoryLoadingStarted>(_loadCategories);
+    on<CategoryLoadingStarted>(_loadCategories,);
     on<PageLoadingStarted>(_loadProducts);
   }
 
@@ -55,8 +60,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
           category: _currentPaginatedCategory!,
           page: _currentPage,
           limit: _pageLimit);
+      print(items);
       if (items.length < _pageLimit) {
-        // Обновить счетчик страниц и выбрать следующую категорию
+        int nextPaginatedCategoryIndex = state.categories!.indexOf(_currentPaginatedCategory!);
+        _currentPaginatedCategory = state.categories?[nextPaginatedCategoryIndex];
       }
       emit(MenuState(
           categories: state.categories,
@@ -75,4 +82,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
           status: MenuStatus.idle));
     }
   }
+}
+
+EventTransformer<E> throttleDroppable<E>(Duration duration) {
+  return (events, mapper) {
+    return droppable<E>().call(events.throttle(duration), mapper);
+  };
 }

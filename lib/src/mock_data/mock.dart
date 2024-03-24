@@ -1,7 +1,7 @@
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
 import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 
-const categories = [
+/*const categories = [
   CategoryModel(
     categoryName: 'Кофе',
     products: [
@@ -32,4 +32,4 @@ const categories = [
       ProductInfoModel(id: 10, name: 'Медовый', price: 229, imagePath: "https://storage.yandexcloud.net/coffee-shop/ca6ecf6c-f1e3-4c3e-bb15-f75d2f067231.jpg"),
     ],
   ),
-];
+];*/

@@ -1,5 +1,5 @@
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
-import 'package:effective_coffee/src/features/menu/models/category_model.dart';
+import 'package:effective_coffee/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/category_section.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/order_bottomsheet.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MenuScreen extends StatefulWidget {
-
   const MenuScreen({super.key});
 
   @override
@@ -16,7 +15,6 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late Map<String, GlobalKey> categoryKeys;
   late String selectedCategoryName;
   final ItemScrollController _menuController = ItemScrollController();
   final ItemScrollController _appBarController = ItemScrollController();
@@ -30,10 +28,6 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
     itemListener = ItemPositionsListener.create();
 
-    categoryKeys = {
-      for (var category in widget.categories) category.categoryName: GlobalKey()
-    };
-
     itemListener.itemPositions.addListener(() {
       final fullVisible = itemListener.itemPositions.value.firstWhere((item) {
         return item.itemLeadingEdge >= 0;
@@ -43,6 +37,10 @@ class _MenuScreenState extends State<MenuScreen> {
           scrolledToBottom == false) {
         setCurrent(fullVisible);
         appBarScrollToCategory(fullVisible);
+      }
+
+      if (scrolledToBottom) {
+        context.read<MenuBloc>().add(const PageLoadingStarted());
       }
     });
   }
@@ -86,33 +84,46 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             child: SizedBox(
               height: 40,
-              child: ScrollablePositionedList.builder(
-                itemScrollController: _appBarController,
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.categories.length,
-                itemBuilder: (context, index) {
-                  final category = widget.categories[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setCurrent(index);
-                        menuScrollToCategory(index);
-                        appBarScrollToCategory(index);
+              child: BlocBuilder<MenuBloc, MenuState>(
+                builder: (context, state) {
+                  if (state.status != MenuStatus.error && state.items != null && state.categories != null) {
+                    return ScrollablePositionedList.builder(
+                      itemScrollController: _appBarController,
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          context.read<MenuBloc>().state.categories!.length,
+                      itemBuilder: (context, index) {
+                        final category =
+                            context.read<MenuBloc>().state.categories![index];
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setCurrent(index);
+                              menuScrollToCategory(index);
+                              appBarScrollToCategory(index);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: index == current
+                                    ? AppColors.lightblue
+                                    : AppColors.white),
+                            child: Text(
+                              category.categoryName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: index == current
+                                          ? AppColors.white
+                                          : AppColors.black),
+                            ),
+                          ),
+                        );
                       },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: index == current
-                              ? AppColors.lightblue
-                              : AppColors.white),
-                      child: Text(
-                        category.categoryName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: index == current
-                                ? AppColors.white
-                                : AppColors.black),
-                      ),
-                    ),
-                  );
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
                 },
               ),
             ),
@@ -120,21 +131,35 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ScrollablePositionedList.builder(
-            itemScrollController: _menuController,
-            itemPositionsListener: itemListener,
-            itemBuilder: (context, index) {
-              final category = widget.categories[index];
-              return CategorySection(
-                key: categoryKeys[category.categoryName],
-                category: category,
-              );
+          child: BlocBuilder<MenuBloc, MenuState>(
+            builder: (context, state) {
+              if (state.status != MenuStatus.error && state.categories != null && state.items != null) {
+                return ScrollablePositionedList.builder(
+                  itemScrollController: _menuController,
+                  itemPositionsListener: itemListener,
+                  itemBuilder: (context, index) {
+                    final category =
+                        context.read<MenuBloc>().state.categories![index];
+                    final products = context
+                        .read<MenuBloc>()
+                        .state
+                        .items!
+                        .where((e) => e.category == category)
+                        .toList();
+                    return CategorySection(
+                      category: category,
+                      products: products,
+                    );
+                  },
+                  itemCount: context.read<MenuBloc>().state.categories!.length,
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
             },
-            itemCount: widget.categories.length,
           ),
         ),
         floatingActionButton: BlocBuilder<CartBloc, CartState>(
-          //bloc: BlocProvider.of<CartBloc>(context),
           builder: (context, state) {
             if (state.status != CartStatus.initial) {
               return FloatingActionButton.extended(

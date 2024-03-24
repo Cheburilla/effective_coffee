@@ -4,7 +4,7 @@ class EffectiveAcademyApi {
 
   Uri _buildUri(
       {required String endpoint,
-      required Map<String, dynamic> Function() parametersBuilder}) {
+      required Map<String, String> Function() parametersBuilder}) {
     return Uri(
       scheme: "https",
       host: _apiBaseUrl,
@@ -48,11 +48,11 @@ class EffectiveAcademyApi {
     );
   }
 
-  Map<String, dynamic> queryParams({int? page, int? limit, int? category}) {
+  Map<String, String> queryParams({int? page, int? limit, int? category}) {
     var params = {'page': page ?? 0, 'limit': limit ?? 25};
     if (category != null) {
       params.addAll({'category': category});
     }
-    return params;
+    return params.map((key, value) => MapEntry(key, value.toString()));
   }
 }
