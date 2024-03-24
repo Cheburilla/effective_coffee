@@ -21,8 +21,8 @@ class ProductCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 100),
+                child: SizedBox(
+                  height: 100,
                   child: CachedNetworkImage(
                     imageUrl: product.imagePath,
                     placeholder: (context, url) =>
