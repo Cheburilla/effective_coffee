@@ -147,7 +147,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     context: context,
                     builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<CartBloc>(context),
-                      child: const OrderBottomSheet(),
+                      child: OrderBottomSheet(scaffoldKey: GlobalKey<ScaffoldMessengerState>(),),
                     ),
                   ),
                 },
