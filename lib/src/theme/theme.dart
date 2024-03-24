@@ -57,4 +57,13 @@ final theme = ThemeData(
       backgroundColor: MaterialStatePropertyAll(AppColors.lightblue),
     ),
   ),
+  bottomSheetTheme: const BottomSheetThemeData(
+    dragHandleColor: AppColors.grey,
+    dragHandleSize: Size(48, 4),
+    surfaceTintColor: AppColors.white,
+    backgroundColor: AppColors.white,
+  ),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: AppColors.snackbar,
+  ),
 );

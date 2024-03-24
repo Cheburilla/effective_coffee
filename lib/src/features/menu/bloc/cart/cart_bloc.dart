@@ -11,15 +11,15 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc(this._repository)
       : super(const CartState(cartItems: <ProductInfoModel, int>{})) {
-    on<AddProduct>(_onAddProduct);
-    on<RemoveProduct>(_onRemoveProduct);
-    on<PostOrder>(_onPostOrder);
-    on<DeleteOrder>(_onDeleteOrder);
+    on<CartProductAdded>(_onCartProductAdded);
+    on<CartProductRemoved>(_onCartProductRemoved);
+    on<CartOrderPosted>(_onCartOrderPosted);
+    on<CartOrderDeleted>(_onCartOrderDeleted);
   }
 
   final MenuRepository _repository;
 
-  Future<void> _onAddProduct(event, emit) async {
+  Future<void> _onCartProductAdded(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
     final count = items[event.product] ?? 0;
     if (count < 10) {
@@ -34,7 +34,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _onRemoveProduct(event, emit) async {
+  Future<void> _onCartProductRemoved(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
     ProductInfoModel newItem = event.product;
     if (items[newItem]! == 1) {
@@ -61,7 +61,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onPostOrder(event, emit) async {
+  Future<void> _onCartOrderPosted(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(
       state.cartItems,
     );
@@ -101,7 +101,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onDeleteOrder(event, emit) async {
+  Future<void> _onCartOrderDeleted(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
     emit(
       state.copyWith(

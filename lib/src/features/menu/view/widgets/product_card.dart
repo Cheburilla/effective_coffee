@@ -61,7 +61,7 @@ class ProductCard extends StatelessWidget {
                                 child: IconButton(
                                   onPressed: () {
                                     BlocProvider.of<CartBloc>(context)
-                                        .add(RemoveProduct(product));
+                                        .add(CartProductRemoved(product));
                                   },
                                   icon: const Icon(
                                     Icons.remove,
@@ -109,7 +109,7 @@ class ProductCard extends StatelessWidget {
                                 child: IconButton(
                                   onPressed: () {
                                     BlocProvider.of<CartBloc>(context)
-                                        .add(AddProduct(product));
+                                        .add(CartProductAdded(product));
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -124,7 +124,7 @@ class ProductCard extends StatelessWidget {
                       : FilledButton(
                           onPressed: () {
                             BlocProvider.of<CartBloc>(context)
-                                .add(AddProduct(product));
+                                .add(CartProductAdded(product));
                           },
                           child: Text(
                             '${product.price} р.',

@@ -1,7 +1,7 @@
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
+import 'package:effective_coffee/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:effective_coffee/src/features/menu/data/menu_repository.dart';
 import 'package:effective_coffee/src/features/menu/view/menu_screen.dart';
-import 'package:effective_coffee/src/mock_data/mock.dart';
 import 'package:flutter/material.dart';
 import 'package:effective_coffee/src/theme/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,11 +26,13 @@ class CoffeeShopApp extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            lazy: false,
             create: (context) => CartBloc(context.read<DioMenuRepository>()),
           ),
+          BlocProvider(
+            create: (context) => MenuBloc(context.read<DioMenuRepository>()),
+          ),
         ],
-        child: const MenuScreen(categories: categories),
+        child: const MenuScreen(),
       ),
     );
   }

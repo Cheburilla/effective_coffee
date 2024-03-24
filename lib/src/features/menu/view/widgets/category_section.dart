@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
   final CategoryModel category;
-
   const CategorySection({super.key, required this.category});
 
   @override

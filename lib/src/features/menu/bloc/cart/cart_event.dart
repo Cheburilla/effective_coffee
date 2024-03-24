@@ -5,38 +5,38 @@ sealed class CartEvent{
   const CartEvent();
 }
 
-class AddProduct extends CartEvent {
+class CartProductAdded extends CartEvent {
   final ProductInfoModel product;
 
-  const AddProduct(this.product);
+  const CartProductAdded(this.product);
 
   @override
-  String toString() => 'AddProduct { id: ${product.id} }';
+  String toString() => 'CartProductAdded { id: ${product.id} }';
 
 }
 
-class RemoveProduct extends CartEvent {
+class CartProductRemoved extends CartEvent {
   final ProductInfoModel product;
 
-  const RemoveProduct(this.product);
+  const CartProductRemoved(this.product);
 
   @override
-  String toString() => 'RemoveProduct { id: ${product.id} }';
+  String toString() => 'CartProductRemoved { id: ${product.id} }';
 
 }
 
-class PostOrder extends CartEvent {
-  const PostOrder();
+class CartOrderPosted extends CartEvent {
+  const CartOrderPosted();
 
   @override
-  String toString() => 'PostOrder';
+  String toString() => 'CartOrderPosted';
 
 }
 
-class DeleteOrder extends CartEvent {
-  const DeleteOrder();
+class CartOrderDeleted extends CartEvent {
+  const CartOrderDeleted();
 
   @override
-  String toString() => 'DeleteOrder';
+  String toString() => 'CartOrderDeleted';
 
 }

@@ -16,21 +16,21 @@ class EffectiveAcademyApi {
   Uri locations({int? page, int? limit}) {
     return _buildUri(
       endpoint: 'locations',
-      parametersBuilder: () => queryParams(page, limit),
+      parametersBuilder: () => queryParams(page: page, limit: limit),
     );
   }
 
   Uri categories({int? page, int? limit}) {
     return _buildUri(
       endpoint: 'products/categories',
-      parametersBuilder: () => queryParams(page, limit),
+      parametersBuilder: () => queryParams(page: page, limit: limit),
     );
   }
 
-  Uri products({int? page, int? limit}) {
+  Uri products({int? category, int? page, int? limit}) {
     return _buildUri(
       endpoint: 'products',
-      parametersBuilder: () => queryParams(page, limit),
+      parametersBuilder: () => queryParams(page: page, limit: limit, category: category),
     );
   }
 
@@ -48,7 +48,11 @@ class EffectiveAcademyApi {
     );
   }
 
-  Map<String, dynamic> queryParams(int? page, int? limit) {
-    return {'page': page ?? 0, 'limit': limit ?? 25};
+  Map<String, dynamic> queryParams({int? page, int? limit, int? category}) {
+    var params = {'page': page ?? 0, 'limit': limit ?? 25};
+    if (category != null) {
+      params.addAll({'category': category});
+    }
+    return params;
   }
 }

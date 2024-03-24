@@ -8,9 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MenuScreen extends StatefulWidget {
-  final List<CategoryModel> categories;
 
-  const MenuScreen({super.key, required this.categories});
+  const MenuScreen({super.key});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -147,7 +146,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     context: context,
                     builder: (_) => BlocProvider.value(
                       value: BlocProvider.of<CartBloc>(context),
-                      child: OrderBottomSheet(scaffoldKey: GlobalKey<ScaffoldMessengerState>(),),
+                      child: const OrderBottomSheet(),
                     ),
                   ),
                 },

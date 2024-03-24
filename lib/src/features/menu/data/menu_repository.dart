@@ -9,6 +9,7 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 abstract class MenuRepository {
   Future<List<CategoryModel>> getCategories({int? page, int? limit});
   Future<ProductInfoModel> getProductInfo(int id);
+  Future<List<ProductInfoModel>> getProducts({int? page, int? limit, CategoryModel? category});
   Future<void> postOrder(Map<ProductInfoModel, int> items);
 }
 
@@ -23,6 +24,14 @@ class DioMenuRepository implements MenuRepository {
           uri: api.categories(page: page, limit: limit),
           builder: (data) => (data as List)
               .map<CategoryModel>((i) => CategoryModel.fromJSON(i))
+              .toList());
+
+  @override
+  Future<List<ProductInfoModel>> getProducts({int? page, int? limit, CategoryModel? category}) =>
+      _getData(
+          uri: api.products(page: page, limit: limit, category: category?.id),
+          builder: (data) => (data as List)
+              .map<ProductInfoModel>((i) => ProductInfoModel.fromJSON(i))
               .toList());
 
   @override
