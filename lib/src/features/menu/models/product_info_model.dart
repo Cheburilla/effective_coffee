@@ -3,7 +3,7 @@ import 'package:effective_coffee/src/features/menu/models/category_model.dart';
 class ProductInfoModel {
   final int id;
   final String name;
-  final int price;
+  final double price;
   final String imagePath;
   final CategoryModel category;
 
@@ -20,9 +20,13 @@ class ProductInfoModel {
       id: json['id'],
       imagePath: json['imageUrl'],
       name: json['name'],
-      price: json['prices'][0]['value'],
+      price: double.parse(
+        ((json['prices'] as List<dynamic>).first
+                as Map<String, dynamic>)['value']
+            .toString(),
+      ),
       category:
-          CategoryModel.fromJson(json['category'] as Map<String, dynamic>),
+          CategoryModel.fromJSON(json['category'] as Map<String, dynamic>),
     );
   }
 }

@@ -1,14 +1,22 @@
 part of 'menu_bloc.dart';
 
-enum MenuStatus { progress, success, error, idle }
+enum MenuStatus {
+  progress,
+  success,
+  error,
+  idle,
+}
 
 final class MenuState extends Equatable {
   final MenuStatus status = MenuStatus.idle;
   final List<CategoryModel>? categories;
   final List<ProductInfoModel>? items;
 
-  const MenuState({this.categories, this.items, required MenuStatus status});
-
+  const MenuState({
+    this.categories,
+    this.items,
+    required MenuStatus status,
+  });
 
   MenuState copyWith({
     List<CategoryModel>? categories,
@@ -28,5 +36,9 @@ final class MenuState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, categories, items];
+  List<Object?> get props => [
+        status,
+        categories,
+        items,
+      ];
 }

@@ -25,8 +25,9 @@ class ProductCard extends StatelessWidget {
                   height: 100,
                   child: CachedNetworkImage(
                     imageUrl: product.imagePath,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                     fit: BoxFit.contain,
@@ -60,8 +61,9 @@ class ProductCard extends StatelessWidget {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    BlocProvider.of<CartBloc>(context)
-                                        .add(CartProductRemoved(product));
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      CartProductRemoved(product),
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.remove,
@@ -108,8 +110,9 @@ class ProductCard extends StatelessWidget {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    BlocProvider.of<CartBloc>(context)
-                                        .add(CartProductAdded(product));
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      CartProductAdded(product),
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.add,

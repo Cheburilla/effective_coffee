@@ -8,15 +8,17 @@ class OrderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        leading: CachedNetworkImage(
-          imageUrl: product.imagePath,
-          placeholder: (context, url) =>
-              const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: BoxFit.contain,
-          width: 55,
+      leading: CachedNetworkImage(
+        imageUrl: product.imagePath,
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(),
         ),
-        title: Text(product.name),
-        trailing: Text("${product.price} р."));
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+        fit: BoxFit.contain,
+        width: 55,
+      ),
+      title: Text(product.name),
+      trailing: Text("${product.price} р."),
+    );
   }
 }

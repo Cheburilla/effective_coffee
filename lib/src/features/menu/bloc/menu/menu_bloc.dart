@@ -6,47 +6,55 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:stream_transform/stream_transform.dart';
-
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
 
-const throttleDuration = Duration(milliseconds: 100);
-
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
-  MenuBloc(this._repository) : super(const MenuState(status: MenuStatus.idle)) {
-    on<CategoryLoadingStarted>(_loadCategories,);
+  MenuBloc(this._repository)
+      : super(
+          const MenuState(status: MenuStatus.idle),
+        ) {
+    on<CategoryLoadingStarted>(
+      _loadCategories,
+    );
     on<PageLoadingStarted>(_loadProducts);
   }
 
   final MenuRepository _repository;
 
   CategoryModel? _currentPaginatedCategory;
-  final int _currentPage = 0;
+  int _currentPage = 0;
 
   final int _pageLimit = 25;
 
   Future<void> _loadCategories(event, emit) async {
-    emit(MenuState(items: state.items, status: MenuStatus.progress));
+    emit(
+      state.copyWith(items: state.items, status: MenuStatus.progress),
+    );
     try {
       final categories = await _repository.getCategories();
-      emit(MenuState(
-          categories: categories,
-          items: List.empty(),
-          status: MenuStatus.success));
+      emit(
+        state.copyWith(
+            categories: categories,
+            items: List.empty(),
+            status: MenuStatus.success),
+      );
     } on Object {
-      emit(MenuState(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.error));
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.error),
+      );
       rethrow;
     } finally {
-      emit(MenuState(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle));
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.idle),
+      );
     }
   }
 
@@ -54,38 +62,49 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     _currentPaginatedCategory ??= state.categories?.first;
     if (_currentPaginatedCategory == null) return;
 
-    emit(MenuState(items: state.items, status: MenuStatus.progress));
+    emit(
+      state.copyWith(items: state.items, status: MenuStatus.progress),
+    );
     try {
+      final List<ProductInfoModel> previousItems =
+          List<ProductInfoModel>.from(state.items as Iterable);
       final items = await _repository.getProducts(
-          category: _currentPaginatedCategory!,
-          page: _currentPage,
-          limit: _pageLimit);
-      print(items);
+        category: _currentPaginatedCategory!,
+        page: _currentPage,
+        limit: _pageLimit,
+      );
+      _currentPage += 1;
       if (items.length < _pageLimit) {
-        int nextPaginatedCategoryIndex = state.categories!.indexOf(_currentPaginatedCategory!);
-        _currentPaginatedCategory = state.categories?[nextPaginatedCategoryIndex];
+        if (_currentPaginatedCategory != state.categories?.last) {
+          int nextPaginatedCategoryIndex =
+              state.categories!.indexOf(_currentPaginatedCategory!) + 1;
+          _currentPaginatedCategory =
+              state.categories?[nextPaginatedCategoryIndex];
+          _currentPage = 0;
+        }
       }
-      emit(MenuState(
-          categories: state.categories,
-          items: items,
-          status: MenuStatus.success));
+      previousItems.addAll(items);
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: previousItems,
+            status: MenuStatus.success),
+      );
     } on Object {
-      emit(MenuState(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.error));
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.error),
+      );
       rethrow;
     } finally {
-      emit(MenuState(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle));
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.idle),
+      );
     }
   }
-}
-
-EventTransformer<E> throttleDroppable<E>(Duration duration) {
-  return (events, mapper) {
-    return droppable<E>().call(events.throttle(duration), mapper);
-  };
 }

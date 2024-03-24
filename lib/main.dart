@@ -14,8 +14,8 @@ void main() {
       DioMenuRepository(api: EffectiveAcademyApi(), client: Dio());
   runZonedGuarded(
       () => runApp(RepositoryProvider.value(
-        value: menuRepository,
-        child: const CoffeeShopApp())), (error, stack) {
+          value: menuRepository,
+          child: const CoffeeShopApp())), (error, stack) {
     log(error.toString(), name: 'App Error', stackTrace: stack);
   });
 }

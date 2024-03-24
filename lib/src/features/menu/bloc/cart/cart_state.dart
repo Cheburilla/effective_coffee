@@ -1,6 +1,12 @@
 part of 'cart_bloc.dart';
 
-enum CartStatus { initial, filled, loading, success, failure }
+enum CartStatus {
+  initial,
+  filled,
+  loading,
+  success,
+  failure,
+}
 
 final class CartState extends Equatable {
   final Map<ProductInfoModel, int> cartItems;
@@ -31,5 +37,9 @@ final class CartState extends Equatable {
   }
 
   @override
-  List<Object> get props => [status, cartItems, cost];
+  List<Object> get props => [
+        status,
+        cartItems,
+        cost,
+      ];
 }

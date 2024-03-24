@@ -21,26 +21,26 @@ class _MenuScreenState extends State<MenuScreen> {
   late ItemPositionsListener itemListener;
   int current = 0;
   bool inProgress = false;
-  bool scrolledToBottom = false;
 
   @override
   void initState() {
     super.initState();
+    context.read<MenuBloc>().add(const PageLoadingStarted());
     itemListener = ItemPositionsListener.create();
-
     itemListener.itemPositions.addListener(() {
-      final fullVisible = itemListener.itemPositions.value.firstWhere((item) {
-        return item.itemLeadingEdge >= 0;
-      }).index;
-
-      if (((fullVisible != current) && inProgress != true) &&
-          scrolledToBottom == false) {
-        setCurrent(fullVisible);
-        appBarScrollToCategory(fullVisible);
-      }
-
-      if (scrolledToBottom) {
-        context.read<MenuBloc>().add(const PageLoadingStarted());
+      final fullVisibles = itemListener.itemPositions.value.where(
+        (item) => item.itemLeadingEdge >= 0,
+      );
+      if (fullVisibles.isNotEmpty) {
+        final fullVisible = itemListener.itemPositions.value
+            .firstWhere(
+              (item) => item.itemLeadingEdge >= 0,
+            )
+            .index;
+        if ((fullVisible != current) && inProgress != true) {
+          setCurrent(fullVisible - 1 > -1 ? fullVisible - 1 : 0);
+          appBarScrollToCategory(fullVisible - 1 > -1 ? fullVisible - 1 : 0);
+        }
       }
     });
   }
@@ -86,7 +86,8 @@ class _MenuScreenState extends State<MenuScreen> {
               height: 40,
               child: BlocBuilder<MenuBloc, MenuState>(
                 builder: (context, state) {
-                  if (state.status != MenuStatus.error && state.items != null && state.categories != null) {
+                  if (state.status != MenuStatus.error &&
+                      state.categories != null) {
                     return ScrollablePositionedList.builder(
                       itemScrollController: _appBarController,
                       scrollDirection: Axis.horizontal,
@@ -133,18 +134,25 @@ class _MenuScreenState extends State<MenuScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: BlocBuilder<MenuBloc, MenuState>(
             builder: (context, state) {
-              if (state.status != MenuStatus.error && state.categories != null && state.items != null) {
+              if (state.status != MenuStatus.error &&
+                      state.categories != null &&
+                      state.items != null
+                  //&& state.items!.isNotEmpty
+                  ) {
                 return ScrollablePositionedList.builder(
                   itemScrollController: _menuController,
                   itemPositionsListener: itemListener,
                   itemBuilder: (context, index) {
+                    if (index % 25 == 10){
+                      context.read<MenuBloc>().add(const PageLoadingStarted());
+                    }
                     final category =
                         context.read<MenuBloc>().state.categories![index];
                     final products = context
                         .read<MenuBloc>()
                         .state
                         .items!
-                        .where((e) => e.category == category)
+                        .where((e) => e.category.id == category.id)
                         .toList();
                     return CategorySection(
                       category: category,

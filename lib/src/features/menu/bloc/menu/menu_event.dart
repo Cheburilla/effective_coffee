@@ -1,7 +1,7 @@
 part of 'menu_bloc.dart';
 
 @immutable
-sealed class MenuEvent{
+sealed class MenuEvent extends Equatable {
   const MenuEvent();
 }
 
@@ -10,14 +10,15 @@ class CategoryLoadingStarted extends MenuEvent {
 
   @override
   String toString() => 'CategoryLoadingStarted';
-
+  @override
+  List<Object> get props => [];
 }
 
 class PageLoadingStarted extends MenuEvent {
-
   const PageLoadingStarted();
 
   @override
   String toString() => 'PageLoadingStarted';
-
+  @override
+  List<Object> get props => [];
 }

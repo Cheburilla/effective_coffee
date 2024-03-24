@@ -31,16 +31,11 @@ class CoffeeShopApp extends StatelessWidget {
             ),
           ),
           BlocProvider(
-            create: (context) => MenuBloc(
-              context.read<DioMenuRepository>(),
-            )
-              ..add(
-                const CategoryLoadingStarted(),
-              )
-              ..add(
-                const PageLoadingStarted(),
-              ),
-          ),
+              create: (context) => MenuBloc(
+                    context.read<DioMenuRepository>(),
+                  )..add(
+                      const CategoryLoadingStarted(),
+                    )),
         ],
         child: const MenuScreen(),
       ),
