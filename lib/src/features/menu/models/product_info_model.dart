@@ -14,11 +14,9 @@ class ProductInfoModel {
   factory ProductInfoModel.fromJSON(Map<String, dynamic> json) {
     return ProductInfoModel(
       id: json['id'],
-      imagePath: json['imagePath'],
+      imagePath: json['imageUrl'],
       name: json['name'],
-      price: json['price'],
+      price: json['prices'][0]['value'],
     );
   }
-
-  static fromJson(data) {}
 }

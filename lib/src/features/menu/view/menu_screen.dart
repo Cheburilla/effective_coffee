@@ -57,17 +57,22 @@ class _MenuScreenState extends State<MenuScreen> {
   void menuScrollToCategory(int ind) async {
     inProgress = true;
     _menuController.scrollTo(
-        index: ind, duration: const Duration(milliseconds: 200));
-    await Future.delayed(const Duration(milliseconds: 200));
+      index: ind,
+      duration: const Duration(milliseconds: 200),
+    );
+    await Future.delayed(
+      const Duration(milliseconds: 200),
+    );
     inProgress = false;
   }
 
   void appBarScrollToCategory(int ind) async {
     _appBarController.scrollTo(
-        curve: Curves.easeOut,
-        opacityAnimationWeights: [20, 20, 60],
-        index: ind,
-        duration: const Duration(milliseconds: 300));
+      curve: Curves.easeOut,
+      opacityAnimationWeights: [20, 20, 60],
+      index: ind,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
@@ -77,7 +82,9 @@ class _MenuScreenState extends State<MenuScreen> {
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           title: PreferredSize(
-            preferredSize: const Size.fromHeight((40)),
+            preferredSize: const Size.fromHeight(
+              (40),
+            ),
             child: SizedBox(
               height: 40,
               child: ScrollablePositionedList.builder(
@@ -130,8 +137,8 @@ class _MenuScreenState extends State<MenuScreen> {
         floatingActionButton: BlocBuilder<CartBloc, CartState>(
           //bloc: BlocProvider.of<CartBloc>(context),
           builder: (context, state) {
-            if (state.status == CartStatus.filled) {
-              return FloatingActionButton(
+            if (state.status != CartStatus.initial) {
+              return FloatingActionButton.extended(
                 backgroundColor: AppColors.lightblue,
                 onPressed: () => {
                   showModalBottomSheet(
@@ -144,9 +151,16 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                 },
-                child: const Icon(
+                icon: const Icon(
                   Icons.local_mall,
                   color: AppColors.white,
+                ),
+                label: Text(
+                  BlocProvider.of<CartBloc>(context)
+                      .state
+                      .cost
+                      .toStringAsFixed(2),
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
               );
             }

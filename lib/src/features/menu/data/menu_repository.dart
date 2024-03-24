@@ -22,13 +22,13 @@ class DioMenuRepository implements MenuRepository {
       _getData(
           uri: api.categories(page: page, limit: limit),
           builder: (data) => (data as List)
-              .map<CategoryModel>((i) => CategoryModel.fromJson(i))
+              .map<CategoryModel>((i) => CategoryModel.fromJSON(i))
               .toList());
 
   @override
   Future<ProductInfoModel> getProductInfo(int id) => _getData(
         uri: api.product(id),
-        builder: (data) => ProductInfoModel.fromJson(data),
+        builder: (data) => ProductInfoModel.fromJSON(data),
       );
 
   Future<T> _getData<T>({

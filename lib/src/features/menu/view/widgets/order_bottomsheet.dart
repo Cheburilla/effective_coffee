@@ -1,6 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
-import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
+import 'package:effective_coffee/src/features/menu/view/widgets/order_bottomsheet_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -34,14 +33,9 @@ class OrderBottomSheet extends StatelessWidget {
             ),
             const Divider(),
             Expanded(
-              child: ListView.builder(
-                  itemCount:
-                      BlocProvider.of<CartBloc>(context).state.cartItems.length,
-                  itemBuilder: (context, index) {
-                    List<ProductInfoModel> products = productMapper(
-                        BlocProvider.of<CartBloc>(context).state.cartItems);
-                    return OrderTile(product: products[index]);
-                  }),
+              child: OrderBottomSheetList(
+                products: BlocProvider.of<CartBloc>(context).state.cartItems,
+              ),
             ),
             BlocListener<CartBloc, CartState>(
               listener: (context, state) {
@@ -72,8 +66,7 @@ class OrderBottomSheet extends StatelessWidget {
                   minimumSize: const Size(double.maxFinite, 56),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: Text(
-                  'Оформить заказ',
+                child: Text(AppLocalizations.of(context)!.makeOrder,
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
@@ -83,34 +76,4 @@ class OrderBottomSheet extends StatelessWidget {
       ),
     );
   }
-}
-
-class OrderTile extends StatelessWidget {
-  const OrderTile({super.key, required this.product});
-  final ProductInfoModel product;
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-        leading: CachedNetworkImage(
-          imageUrl: product.imagePath,
-          placeholder: (context, url) =>
-              const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: BoxFit.contain,
-          width: 55,
-        ),
-        title: Text(product.name),
-        trailing: Text("${product.price} р."));
-  }
-}
-
-List<ProductInfoModel> productMapper<ProductInfoModel>(
-    Map<ProductInfoModel, int> products) {
-  var tempMap = Map.from(products);
-  List<ProductInfoModel> result = [];
-  tempMap.forEach((key, value) {
-    result.addAll(List.filled(value, key, growable: true));
-  });
-  print(result.length);
-  return result;
 }
