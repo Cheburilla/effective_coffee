@@ -85,7 +85,9 @@ class OrderBottomSheet extends StatelessWidget {
                           SnackBar(
                             duration: const Duration(seconds: 2),
                             content: Text(
-                                AppLocalizations.of(context)!.orderSuccess),
+                              AppLocalizations.of(context)!.orderSuccess,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
                           ),
                         );
                       }
@@ -94,7 +96,9 @@ class OrderBottomSheet extends StatelessWidget {
                           SnackBar(
                             duration: const Duration(seconds: 2),
                             content: Text(
-                                AppLocalizations.of(context)!.orderFailure),
+                              AppLocalizations.of(context)!.orderFailure,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
                           ),
                         );
                       }
