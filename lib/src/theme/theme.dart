@@ -57,6 +57,7 @@ final theme = ThemeData(
       fontSize: 20,
       height: 1.2,
       letterSpacing: 0.25,
+      color: AppColors.white
     ),
     labelMedium: TextStyle(
         fontFamily: 'Roboto',
