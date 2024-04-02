@@ -80,7 +80,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
     final List<ProductInfoModel> previousItems =
-          List<ProductInfoModel>.from(state.items ?? []);
+          List<ProductInfoModel>.from(state.items);
     try {
 
       final items = await _repository.getProducts(
@@ -114,7 +114,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
 
   Future<void> _loadProducts(event, emit) async {
     List<CategoryModel>? categories = state.categories;
-    if (categories == null || categories.isEmpty) return;
+    if (categories.isEmpty) return;
     CategoryModel? currentCategory = _currentPaginatedCategory;
     currentCategory ??= categories.first;
     emit(
@@ -122,7 +122,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     );
     try {
       final List<ProductInfoModel> previousItems =
-          List<ProductInfoModel>.from(state.items ?? []);
+          List<ProductInfoModel>.from(state.items);
       final items = await _repository.getProducts(
         category: currentCategory,
         page: _currentPage,

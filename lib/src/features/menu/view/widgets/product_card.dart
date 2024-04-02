@@ -5,11 +5,19 @@ import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final ProductInfoModel product;
 
   const ProductCard({super.key, required this.product});
 
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool get showQuantityButtons => _quantity > 0;
+
+  int _quantity = 0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -24,9 +32,9 @@ class ProductCard extends StatelessWidget {
                 child: SizedBox(
                   height: 100,
                   child: CachedNetworkImage(
-                    imageUrl: product.imagePath,
+                    imageUrl: widget.product.imagePath,
                     placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(),
+                      child: SizedBox(),
                     ),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
@@ -37,7 +45,7 @@ class ProductCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Text(
-                  product.name,
+                  widget.product.name,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -45,10 +53,11 @@ class ProductCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: SizedBox(
                   height: 24,
-                  child: BlocProvider.of<CartBloc>(context, listen: true)
+                  child: context
+                          .read<CartBloc>()
                           .state
                           .cartItems
-                          .containsKey(product)
+                          .containsKey(widget.product)
                       ? Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,9 +70,12 @@ class ProductCard extends StatelessWidget {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      CartProductRemoved(product),
-                                    );
+                                    setState(() {
+                                      _quantity--;
+                                    });
+                                    context.read<CartBloc>().add(
+                                          CartProductChanged(widget.product, 0),
+                                        );
                                   },
                                   icon: const Icon(
                                     Icons.remove,
@@ -91,7 +103,7 @@ class ProductCard extends StatelessWidget {
                                       child: BlocBuilder<CartBloc, CartState>(
                                           builder: (context, state) {
                                         return Text(
-                                          '${state.cartItems[product]}',
+                                          '$_quantity',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall,
@@ -110,9 +122,15 @@ class ProductCard extends StatelessWidget {
                                     color: AppColors.lightblue),
                                 child: IconButton(
                                   onPressed: () {
-                                    BlocProvider.of<CartBloc>(context).add(
-                                      CartProductAdded(product),
-                                    );
+                                    setState(() {
+                                      if (_quantity < 10) {
+                                        _quantity++;
+                                        context.read<CartBloc>().add(
+                                              CartProductChanged(
+                                                  widget.product, _quantity),
+                                            );
+                                      }
+                                    });
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -126,11 +144,15 @@ class ProductCard extends StatelessWidget {
                         )
                       : FilledButton(
                           onPressed: () {
-                            BlocProvider.of<CartBloc>(context)
-                                .add(CartProductAdded(product));
+                            setState(() {
+                              _quantity = 1;
+                            });
+                            context
+                                .read<CartBloc>()
+                                .add(CartProductChanged(widget.product, 1));
                           },
                           child: Text(
-                            '${product.price.floor()} р.',
+                            '${widget.product.price.floor()} р.',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),

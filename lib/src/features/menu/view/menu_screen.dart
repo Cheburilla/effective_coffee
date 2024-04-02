@@ -33,43 +33,19 @@ class _MenuScreenState extends State<MenuScreen> {
         setCurrent(itemListener.itemPositions.value.first.index);
         appBarScrollToCategory(itemListener.itemPositions.value.first.index);
       }
-      debugPrint(itemListener.itemPositions.value.toString());
-      // final fullVisibles = itemListener.itemPositions.value.where(
-      //   (item) => item.itemLeadingEdge >= 0,
-      // );
-      // if (fullVisibles.isNotEmpty) {
-      //   final fullVisible = itemListener.itemPositions.value
-      //       .firstWhere(
-      //         (item) => item.itemLeadingEdge >= 0,
-      //       )
-      //       .index;
-      //   if (fullVisible != current && inProgress != true) {
-      //     setCurrent(fullVisible > 0 ? fullVisible : 0);
-      //     appBarScrollToCategory(fullVisible > 0 ? fullVisible : 0);
-      //   }
-      // }
       bool needToPaginate =
-          //itemListener.itemPositions.value.first.itemTrailingEdge <= 3 &&
           itemListener.itemPositions.value.last.itemTrailingEdge <= 3 &&
               inProgress != true &&
               context
                   .read<MenuBloc>()
                   .state
-                  .items!
+                  .items
                   .where((e) => e.category.id == current + 2)
                   .toList()
                   .isEmpty;
       if (needToPaginate) {
         context.read<MenuBloc>().add(const PageLoadingStarted());
       }
-      debugPrint(context
-          .read<MenuBloc>()
-          .state
-          .items!
-          .where((e) => e.category.id == current + 2)
-          .toList()
-          .length
-          .toString());
     });
   }
 
@@ -96,7 +72,7 @@ class _MenuScreenState extends State<MenuScreen> {
       curve: Curves.easeOut,
       opacityAnimationWeights: [20, 20, 60],
       index: ind,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 1000),
     );
   }
 
@@ -104,12 +80,10 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<MenuBloc, MenuState>(
       buildWhen: (context, state) {
-    return state.status == MenuStatus.idle;
-  },
+        return state.status == MenuStatus.idle;
+      },
       builder: (context, state) {
-        if (state.status != MenuStatus.error &&
-            state.categories != null &&
-            state.items != null) {
+        if (state.status != MenuStatus.error) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
@@ -123,16 +97,15 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: ScrollablePositionedList.builder(
                         itemScrollController: _appBarController,
                         scrollDirection: Axis.horizontal,
-                        itemCount:
-                            state.categories!.length,
+                        itemCount: state.categories.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(4),
                             child: ElevatedButton(
                               onPressed: () {
                                 context.read<MenuBloc>().add(
-                                    OneCategoryLoadingStarted(state
-                                        .categories![index]));
+                                    OneCategoryLoadingStarted(
+                                        state.categories[index]));
                                 setCurrent(index);
                                 menuScrollToCategory(index);
                                 appBarScrollToCategory(index);
@@ -142,8 +115,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       ? AppColors.lightblue
                                       : AppColors.white),
                               child: Text(
-                                state
-                                        .categories![index].categoryName,
+                                state.categories[index].categoryName,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -164,10 +136,8 @@ class _MenuScreenState extends State<MenuScreen> {
                   itemScrollController: _menuController,
                   itemPositionsListener: itemListener,
                   itemBuilder: (context, index) {
-                    final category =
-                        state.categories![index];
-                    final products = state
-                        .items!
+                    final category = state.categories[index];
+                    final products = state.items
                         .where((e) => e.category.id == category.id)
                         .toList();
                     return CategorySection(
@@ -175,7 +145,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       products: products,
                     );
                   },
-                  itemCount: state.categories!.length,
+                  itemCount: state.categories.length,
                 ),
               ),
               floatingActionButton: BlocBuilder<CartBloc, CartState>(

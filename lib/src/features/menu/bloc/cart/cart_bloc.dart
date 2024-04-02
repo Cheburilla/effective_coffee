@@ -11,20 +11,17 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc(this._repository)
       : super(const CartState(cartItems: <ProductInfoModel, int>{})) {
-    on<CartProductAdded>(_onCartProductAdded);
-    on<CartProductRemoved>(_onCartProductRemoved);
+    on<CartProductChanged>(_onCartProductChanged);
     on<CartOrderPosted>(_onCartOrderPosted);
     on<CartOrderDeleted>(_onCartOrderDeleted);
   }
 
   final MenuRepository _repository;
 
-  Future<void> _onCartProductAdded(event, emit) async {
+  Future<void> _onCartProductChanged(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
-    final count = items[event.product] ?? 0;
-    if (count < 10) {
-      items[event.product] = count + 1;
-    }
+    final count = event.count;
+    items[event.product] = count;
     emit(
       state.copyWith(
         status: CartStatus.filled,
@@ -32,33 +29,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         cost: _costsCounter(items),
       ),
     );
-  }
-
-  Future<void> _onCartProductRemoved(event, emit) async {
-    Map<ProductInfoModel, int> items = Map.from(state.cartItems);
-    ProductInfoModel newItem = event.product;
-    if (items[newItem] == 1) {
-      items.remove(newItem);
-    } else {
-      items[newItem] = (items[newItem]! - 1);
-    }
-    if (items.isEmpty) {
-      emit(
-        state.copyWith(
-          status: CartStatus.initial,
-          cartItems: <ProductInfoModel, int>{},
-          cost: _costsCounter(items),
-        ),
-      );
-    } else {
-      emit(
-        state.copyWith(
-          status: CartStatus.filled,
-          cartItems: items,
-          cost: _costsCounter(items),
-        ),
-      );
-    }
   }
 
   Future<void> _onCartOrderPosted(event, emit) async {
@@ -115,9 +85,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   double _costsCounter(Map<ProductInfoModel, int> products) {
     double costs = 0;
     for (var product in products.entries) {
-      final productPrice = product.key.price;
-      final productCount = product.value;
-      costs += productPrice * productCount;
+      costs += product.key.price * product.value;
     }
     return costs;
   }

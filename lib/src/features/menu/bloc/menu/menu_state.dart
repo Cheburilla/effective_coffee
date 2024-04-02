@@ -9,12 +9,12 @@ enum MenuStatus {
 
 final class MenuState extends Equatable {
   final MenuStatus status = MenuStatus.idle;
-  final List<CategoryModel>? categories;
-  final List<ProductInfoModel>? items;
+  final List<CategoryModel> categories;
+  final List<ProductInfoModel> items;
 
   const MenuState({
-    this.categories,
-    this.items,
+    required this.categories,
+    required this.items,
     required MenuStatus status,
   });
 
@@ -32,7 +32,7 @@ final class MenuState extends Equatable {
 
   @override
   String toString() {
-    return '''MenuStatus { status: $status, categories: ${categories?.length}, items: ${items?.length} }''';
+    return '''MenuStatus { status: $status, categories: ${categories.length}, items: ${items.length} }''';
   }
 
   @override

@@ -11,7 +11,7 @@ class OrderTile extends StatelessWidget {
       leading: CachedNetworkImage(
         imageUrl: product.imagePath,
         placeholder: (context, url) => const Center(
-          child: CircularProgressIndicator(),
+          child: SizedBox.shrink(),
         ),
         errorWidget: (context, url, error) => const Icon(Icons.error),
         fit: BoxFit.contain,

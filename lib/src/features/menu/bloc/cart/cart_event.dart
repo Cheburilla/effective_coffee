@@ -5,31 +5,16 @@ sealed class CartEvent extends Equatable {
   const CartEvent();
 }
 
-class CartProductAdded extends CartEvent {
+class CartProductChanged extends CartEvent {
   final ProductInfoModel product;
-
-  const CartProductAdded(
+  final int count;
+  const CartProductChanged(
     this.product,
+    this.count,
   );
 
   @override
-  String toString() => 'CartProductAdded { id: ${product.id} }';
-
-  @override
-  List<Object> get props => [
-        product,
-      ];
-}
-
-class CartProductRemoved extends CartEvent {
-  final ProductInfoModel product;
-
-  const CartProductRemoved(
-    this.product,
-  );
-
-  @override
-  String toString() => 'CartProductRemoved { id: ${product.id} }';
+  String toString() => 'CartProductChanged { id: ${product.id} }';
 
   @override
   List<Object> get props => [

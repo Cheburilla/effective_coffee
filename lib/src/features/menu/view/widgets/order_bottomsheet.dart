@@ -11,7 +11,7 @@ class OrderBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.sizeOf(context).height * 0.91,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -58,9 +58,9 @@ class OrderBottomSheet extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          BlocProvider.of<CartBloc>(context).add(
-                            const CartOrderDeleted(),
-                          );
+                          context.read<CartBloc>().add(
+                                const CartOrderDeleted(),
+                              );
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.delete),
@@ -70,16 +70,15 @@ class OrderBottomSheet extends StatelessWidget {
                   const Divider(),
                   Expanded(
                     child: OrderBottomSheetList(
-                      products:
-                          BlocProvider.of<CartBloc>(context).state.cartItems,
+                      products: context.read<CartBloc>().state.cartItems,
                     ),
                   ),
                   BlocListener<CartBloc, CartState>(
                     listener: (context, state) {
                       if (state.status == CartStatus.success) {
-                        BlocProvider.of<CartBloc>(context).add(
-                          const CartOrderDeleted(),
-                        );
+                        context.read<CartBloc>().add(
+                              const CartOrderDeleted(),
+                            );
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -105,8 +104,7 @@ class OrderBottomSheet extends StatelessWidget {
                     },
                     child: ElevatedButton(
                       onPressed: () {
-                        BlocProvider.of<CartBloc>(context)
-                            .add(const CartOrderPosted());
+                        context.read<CartBloc>().add(const CartOrderPosted());
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(double.maxFinite, 56),

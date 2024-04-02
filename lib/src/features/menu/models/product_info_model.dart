@@ -16,9 +16,8 @@ class ProductInfoModel {
   });
 
   factory ProductInfoModel.fromJSON(Map<String, dynamic> json) {
-    final prices = json['prices'] is! List<dynamic>
-        ? throw const FormatException()
-        : json['prices'];
+    if (json['prices'] is! List<dynamic> || json['category'] is! Map<String, dynamic>) throw const FormatException();
+    final prices = json['prices'];
     return ProductInfoModel(
       id: json['id'],
       imagePath: json['imageUrl'],
@@ -28,9 +27,7 @@ class ProductInfoModel {
             ? throw const FormatException()
             : prices.first['value'].toString(),
       ),
-      category: json['category'] is! Map<String, dynamic>
-          ? throw const FormatException()
-          : CategoryModel.fromJSON(json['category']),
+      category: CategoryModel.fromJSON(json['category']),
     );
   }
 }
