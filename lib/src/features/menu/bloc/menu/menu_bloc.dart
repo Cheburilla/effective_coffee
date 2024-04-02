@@ -12,7 +12,7 @@ import 'package:stream_transform/stream_transform.dart';
 part 'menu_event.dart';
 part 'menu_state.dart';
 
-const throttleDuration = Duration(milliseconds: 200);
+const throttleDuration = Duration(milliseconds: 100);
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
   return (events, mapper) {
@@ -79,12 +79,12 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     emit(
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
-    try {
-      final List<ProductInfoModel> previousItems =
+    final List<ProductInfoModel> previousItems =
           List<ProductInfoModel>.from(state.items ?? []);
+    try {
+
       final items = await _repository.getProducts(
         category: currentCategory,
-        page: 0,
         limit: _pageLimit,
       );
       previousItems.addAll(items);
@@ -106,7 +106,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       emit(
         state.copyWith(
             categories: state.categories,
-            items: state.items,
+            items: previousItems,
             status: MenuStatus.idle),
       );
     }

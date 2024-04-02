@@ -27,25 +27,49 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
     itemListener = ItemPositionsListener.create();
     itemListener.itemPositions.addListener(() {
-      debugPrint(itemListener.itemPositions.value.toString());
-      final fullVisibles = itemListener.itemPositions.value.where(
-        (item) => item.itemLeadingEdge >= 0,
-      );
-      if (fullVisibles.isNotEmpty) {
-        final fullVisible = itemListener.itemPositions.value
-            .firstWhere(
-              (item) => item.itemLeadingEdge >= 0,
-            )
-            .index;
-        if ((fullVisible != current) && inProgress != true) {
-          setCurrent(fullVisible > 0 ? fullVisible : 0);
-          appBarScrollToCategory(fullVisible > 0 ? fullVisible : 0);
-        }
+      if (itemListener.itemPositions.value.isNotEmpty &&
+          inProgress != true &&
+          current != itemListener.itemPositions.value.first.index) {
+        setCurrent(itemListener.itemPositions.value.first.index);
+        appBarScrollToCategory(itemListener.itemPositions.value.first.index);
       }
-      bool needToPaginate = itemListener.itemPositions.value.last.itemTrailingEdge <= 3;
+      debugPrint(itemListener.itemPositions.value.toString());
+      // final fullVisibles = itemListener.itemPositions.value.where(
+      //   (item) => item.itemLeadingEdge >= 0,
+      // );
+      // if (fullVisibles.isNotEmpty) {
+      //   final fullVisible = itemListener.itemPositions.value
+      //       .firstWhere(
+      //         (item) => item.itemLeadingEdge >= 0,
+      //       )
+      //       .index;
+      //   if (fullVisible != current && inProgress != true) {
+      //     setCurrent(fullVisible > 0 ? fullVisible : 0);
+      //     appBarScrollToCategory(fullVisible > 0 ? fullVisible : 0);
+      //   }
+      // }
+      bool needToPaginate =
+          //itemListener.itemPositions.value.first.itemTrailingEdge <= 3 &&
+          itemListener.itemPositions.value.last.itemTrailingEdge <= 3 &&
+              inProgress != true &&
+              context
+                  .read<MenuBloc>()
+                  .state
+                  .items!
+                  .where((e) => e.category.id == current + 2)
+                  .toList()
+                  .isEmpty;
       if (needToPaginate) {
         context.read<MenuBloc>().add(const PageLoadingStarted());
       }
+      debugPrint(context
+          .read<MenuBloc>()
+          .state
+          .items!
+          .where((e) => e.category.id == current + 2)
+          .toList()
+          .length
+          .toString());
     });
   }
 
@@ -59,10 +83,10 @@ class _MenuScreenState extends State<MenuScreen> {
     inProgress = true;
     _menuController.scrollTo(
       index: ind,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 1000),
     );
     await Future.delayed(
-      const Duration(milliseconds: 200),
+      const Duration(milliseconds: 1000),
     );
     inProgress = false;
   }
@@ -78,79 +102,71 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.transparent,
-          title: PreferredSize(
-            preferredSize: const Size.fromHeight(
-              (40),
-            ),
-            child: SizedBox(
-              height: 40,
-              child: BlocBuilder<MenuBloc, MenuState>(
-                builder: (context, state) {
-                  if (state.status != MenuStatus.error &&
-                      state.categories != null) {
-                    return ScrollablePositionedList.builder(
-                      itemScrollController: _appBarController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          context.read<MenuBloc>().state.categories!.length,
-                      itemBuilder: (context, index) {
-                        final category =
-                            context.read<MenuBloc>().state.categories![index];
-                        return Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.read<MenuBloc>().add(OneCategoryLoadingStarted(context.read<MenuBloc>().state.categories![index]));
-                              setCurrent(index);
-                              menuScrollToCategory(index);
-                              appBarScrollToCategory(index);
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: index == current
-                                    ? AppColors.lightblue
-                                    : AppColors.white),
-                            child: Text(
-                              category.categoryName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: index == current
-                                          ? AppColors.white
-                                          : AppColors.black),
+    return BlocBuilder<MenuBloc, MenuState>(
+      buildWhen: (context, state) {
+    return state.status == MenuStatus.idle;
+  },
+      builder: (context, state) {
+        if (state.status != MenuStatus.error &&
+            state.categories != null &&
+            state.items != null) {
+          return SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                surfaceTintColor: Colors.transparent,
+                title: PreferredSize(
+                    preferredSize: const Size.fromHeight(
+                      (40),
+                    ),
+                    child: SizedBox(
+                      height: 40,
+                      child: ScrollablePositionedList.builder(
+                        itemScrollController: _appBarController,
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            state.categories!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.read<MenuBloc>().add(
+                                    OneCategoryLoadingStarted(state
+                                        .categories![index]));
+                                setCurrent(index);
+                                menuScrollToCategory(index);
+                                appBarScrollToCategory(index);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: index == current
+                                      ? AppColors.lightblue
+                                      : AppColors.white),
+                              child: Text(
+                                state
+                                        .categories![index].categoryName,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: index == current
+                                            ? AppColors.white
+                                            : AppColors.black),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
+                          );
+                        },
+                      ),
+                    )),
               ),
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: BlocBuilder<MenuBloc, MenuState>(
-            builder: (context, state) {
-              if (state.status != MenuStatus.error &&
-                  state.categories != null &&
-                  state.items != null) {
-                return ScrollablePositionedList.builder(
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ScrollablePositionedList.builder(
                   itemScrollController: _menuController,
                   itemPositionsListener: itemListener,
                   itemBuilder: (context, index) {
                     final category =
-                        context.read<MenuBloc>().state.categories![index];
-                    final products = context
-                        .read<MenuBloc>()
-                        .state
+                        state.categories![index];
+                    final products = state
                         .items!
                         .where((e) => e.category.id == category.id)
                         .toList();
@@ -159,44 +175,45 @@ class _MenuScreenState extends State<MenuScreen> {
                       products: products,
                     );
                   },
-                  itemCount: context.read<MenuBloc>().state.categories!.length,
-                );
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
-          ),
-        ),
-        floatingActionButton: BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            if (state.status != CartStatus.initial) {
-              return FloatingActionButton.extended(
-                backgroundColor: AppColors.lightblue,
-                onPressed: () => {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: AppColors.white,
-                    context: context,
-                    builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<CartBloc>(context),
-                      child: const OrderBottomSheet(),
-                    ),
-                  ),
+                  itemCount: state.categories!.length,
+                ),
+              ),
+              floatingActionButton: BlocBuilder<CartBloc, CartState>(
+                builder: (context, state) {
+                  if (state.status != CartStatus.initial) {
+                    return FloatingActionButton.extended(
+                      backgroundColor: AppColors.lightblue,
+                      onPressed: () => {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: AppColors.white,
+                          context: context,
+                          builder: (_) => BlocProvider.value(
+                            value: BlocProvider.of<CartBloc>(context),
+                            child: const OrderBottomSheet(),
+                          ),
+                        ),
+                      },
+                      icon: const Icon(
+                        Icons.local_mall,
+                        color: AppColors.white,
+                      ),
+                      label: Text(
+                        '${state.cost.floor()} ₽',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
                 },
-                icon: const Icon(
-                  Icons.local_mall,
-                  color: AppColors.white,
-                ),
-                label: Text(
-                  '${BlocProvider.of<CartBloc>(context).state.cost.floor()} ₽',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-              );
-            }
-            return Container();
-          },
-        ),
-      ),
+              ),
+            ),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
