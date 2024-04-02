@@ -6,24 +6,37 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
 
+const throttleDuration = Duration(milliseconds: 200);
+
+EventTransformer<E> throttleDroppable<E>(Duration duration) {
+  return (events, mapper) {
+    return droppable<E>().call(events.throttle(duration), mapper);
+  };
+}
+
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc(this._repository)
       : super(
-          const MenuState(status: MenuStatus.idle),
+          const MenuState(status: MenuStatus.idle, items: [], categories: []),
         ) {
-    on<CategoryLoadingStarted>(
-      _loadCategories,
+    on<CategoryLoadingStarted>(_loadCategories);
+    on<PageLoadingStarted>(
+      _loadProducts,
+      transformer: throttleDroppable(throttleDuration),
     );
-    on<PageLoadingStarted>(_loadProducts);
+    on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
   }
 
   final MenuRepository _repository;
 
   CategoryModel? _currentPaginatedCategory;
+
   int _currentPage = 0;
 
   final int _pageLimit = 25;
@@ -38,6 +51,47 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         state.copyWith(
             categories: categories,
             items: List.empty(),
+            status: MenuStatus.success),
+      );
+      add(
+        const PageLoadingStarted(),
+      );
+    } on Object {
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.error),
+      );
+      rethrow;
+    } finally {
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: state.items,
+            status: MenuStatus.idle),
+      );
+    }
+  }
+
+  Future<void> _loadProductsFromOneCategory(event, emit) async {
+    CategoryModel? currentCategory = event.category;
+    emit(
+      state.copyWith(items: state.items, status: MenuStatus.progress),
+    );
+    try {
+      final List<ProductInfoModel> previousItems =
+          List<ProductInfoModel>.from(state.items ?? []);
+      final items = await _repository.getProducts(
+        category: currentCategory,
+        page: 0,
+        limit: _pageLimit,
+      );
+      previousItems.addAll(items);
+      emit(
+        state.copyWith(
+            categories: state.categories,
+            items: previousItems,
             status: MenuStatus.success),
       );
     } on Object {
@@ -59,30 +113,31 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   }
 
   Future<void> _loadProducts(event, emit) async {
-    _currentPaginatedCategory ??= state.categories?.first;
-    if (_currentPaginatedCategory == null) return;
-
+    List<CategoryModel>? categories = state.categories;
+    if (categories == null || categories.isEmpty) return;
+    CategoryModel? currentCategory = _currentPaginatedCategory;
+    currentCategory ??= categories.first;
     emit(
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
     try {
       final List<ProductInfoModel> previousItems =
-          List<ProductInfoModel>.from(state.items as Iterable);
+          List<ProductInfoModel>.from(state.items ?? []);
       final items = await _repository.getProducts(
-        category: _currentPaginatedCategory!,
+        category: currentCategory,
         page: _currentPage,
         limit: _pageLimit,
       );
       _currentPage += 1;
       if (items.length < _pageLimit) {
-        if (_currentPaginatedCategory != state.categories?.last) {
+        if (currentCategory != categories.last) {
           int nextPaginatedCategoryIndex =
-              state.categories!.indexOf(_currentPaginatedCategory!) + 1;
-          _currentPaginatedCategory =
-              state.categories?[nextPaginatedCategoryIndex];
+              categories.indexOf(currentCategory) + 1;
+          currentCategory = categories[nextPaginatedCategoryIndex];
           _currentPage = 0;
         }
       }
+      _currentPaginatedCategory = currentCategory;
       previousItems.addAll(items);
       emit(
         state.copyWith(

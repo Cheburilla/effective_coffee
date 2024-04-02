@@ -23,9 +23,14 @@ class DioMenuRepository implements MenuRepository {
   Future<List<CategoryModel>> getCategories({int? page, int? limit}) =>
       _getData(
         uri: api.categories(page: page, limit: limit),
-        builder: (data) => (data as List)
-            .map<CategoryModel>((i) => CategoryModel.fromJSON(i))
-            .toList(),
+        builder: (data) {
+          if (data is! List) throw const FormatException();
+          return (data)
+              .map<CategoryModel>(
+                (i) => CategoryModel.fromJSON(i),
+              )
+              .toList();
+        },
       );
 
   @override
@@ -33,9 +38,14 @@ class DioMenuRepository implements MenuRepository {
           {int? page, int? limit, CategoryModel? category}) =>
       _getData(
         uri: api.products(page: page, limit: limit, category: category?.id),
-        builder: (data) => (data as List)
-            .map<ProductInfoModel>((i) => ProductInfoModel.fromJSON(i))
-            .toList(),
+        builder: (data) {
+          if (data is! List) throw const FormatException();
+          return (data)
+              .map<ProductInfoModel>(
+                (i) => ProductInfoModel.fromJSON(i),
+              )
+              .toList();
+        },
       );
 
   @override
@@ -53,7 +63,7 @@ class DioMenuRepository implements MenuRepository {
       switch (response.statusCode) {
         case 200:
           final data = response.data['data'];
-          return builder(data);
+          return builder(data); //compute(builder, data);
         default:
           throw UnknownException();
       }

@@ -2,19 +2,29 @@ import 'package:effective_coffee/src/features/menu/models/product_info_model.dar
 import 'package:effective_coffee/src/features/menu/view/widgets/order_tile.dart';
 import 'package:flutter/material.dart';
 
-class OrderBottomSheetList extends StatelessWidget {
+class OrderBottomSheetList extends StatefulWidget {
   const OrderBottomSheetList({super.key, required this.products});
 
   final Map<ProductInfoModel, int> products;
 
   @override
-  Widget build(BuildContext context) {
-    final List<ProductInfoModel> orderList = [];
-    for (var element in products.entries) {
+  State<OrderBottomSheetList> createState() => _OrderBottomSheetListState();
+}
+
+class _OrderBottomSheetListState extends State<OrderBottomSheetList> {
+  final List<ProductInfoModel> orderList = [];
+  @override
+  void initState() {
+    super.initState();
+    for (var element in widget.products.entries) {
       for (var i = 0; i < element.value; i++) {
         orderList.add(element.key);
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
         return OrderTile(

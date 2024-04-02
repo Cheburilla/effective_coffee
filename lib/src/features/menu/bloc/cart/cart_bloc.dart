@@ -37,7 +37,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> _onCartProductRemoved(event, emit) async {
     Map<ProductInfoModel, int> items = Map.from(state.cartItems);
     ProductInfoModel newItem = event.product;
-    if (items[newItem]! == 1) {
+    if (items[newItem] == 1) {
       items.remove(newItem);
     } else {
       items[newItem] = (items[newItem]! - 1);

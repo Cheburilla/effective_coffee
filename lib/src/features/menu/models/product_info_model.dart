@@ -16,17 +16,21 @@ class ProductInfoModel {
   });
 
   factory ProductInfoModel.fromJSON(Map<String, dynamic> json) {
+    final prices = json['prices'] is! List<dynamic>
+        ? throw const FormatException()
+        : json['prices'];
     return ProductInfoModel(
       id: json['id'],
       imagePath: json['imageUrl'],
       name: json['name'],
       price: double.parse(
-        ((json['prices'] as List<dynamic>).first
-                as Map<String, dynamic>)['value']
-            .toString(),
+        prices.first is! Map<String, dynamic>
+            ? throw const FormatException()
+            : prices.first['value'].toString(),
       ),
-      category:
-          CategoryModel.fromJSON(json['category'] as Map<String, dynamic>),
+      category: json['category'] is! Map<String, dynamic>
+          ? throw const FormatException()
+          : CategoryModel.fromJSON(json['category']),
     );
   }
 }

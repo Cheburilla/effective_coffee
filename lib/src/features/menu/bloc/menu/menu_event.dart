@@ -22,3 +22,12 @@ class PageLoadingStarted extends MenuEvent {
   @override
   List<Object> get props => [];
 }
+
+class OneCategoryLoadingStarted extends MenuEvent {
+  const OneCategoryLoadingStarted(this.category);
+  final CategoryModel category;
+  @override
+  String toString() => 'OneCategoryLoadingStarted';
+  @override
+  List<Object> get props => [category];
+}
