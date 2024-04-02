@@ -70,7 +70,7 @@ class OrderBottomSheet extends StatelessWidget {
                   const Divider(),
                   Expanded(
                     child: OrderBottomSheetList(
-                      products: context.read<CartBloc>().state.cartItems,
+                      products: context.watch<CartBloc>().state.cartItems,
                     ),
                   ),
                   BlocListener<CartBloc, CartState>(
