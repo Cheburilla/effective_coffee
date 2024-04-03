@@ -150,7 +150,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
               floatingActionButton: BlocBuilder<CartBloc, CartState>(
                 builder: (context, state) {
-                  if (state.status != CartStatus.initial) {
+                  if (state.cartItems.isNotEmpty) {
                     return FloatingActionButton.extended(
                       backgroundColor: AppColors.lightblue,
                       onPressed: () => {

@@ -1,8 +1,7 @@
 part of 'cart_bloc.dart';
 
 enum CartStatus {
-  initial,
-  filled,
+  idle,
   loading,
   success,
   failure,
@@ -14,7 +13,7 @@ final class CartState extends Equatable {
   final double cost;
 
   const CartState({
-    this.status = CartStatus.initial,
+    this.status = CartStatus.idle,
     required this.cartItems,
     this.cost = 0,
   });
