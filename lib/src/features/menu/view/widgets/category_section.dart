@@ -1,11 +1,13 @@
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
   final CategoryModel category;
-
-  const CategorySection({super.key, required this.category});
+  final List<ProductInfoModel> products;
+  const CategorySection(
+      {super.key, required this.products, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,9 @@ class CategorySection extends StatelessWidget {
             crossAxisSpacing: 16.0,
             mainAxisExtent: 196,
           ),
-          itemCount: category.products.length,
+          itemCount: products.length,
           itemBuilder: (context, index) {
-            return ProductCard(product: category.products[index]);
+            return ProductCard(product: products[index]);
           },
         ),
       ],
