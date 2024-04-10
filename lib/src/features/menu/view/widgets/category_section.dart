@@ -1,11 +1,11 @@
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
-import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
   final CategoryModel category;
-  final List<ProductInfoModel> products;
+  final List<ProductModel> products;
   const CategorySection(
       {super.key, required this.products, required this.category});
 

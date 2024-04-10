@@ -6,7 +6,7 @@ sealed class CartEvent extends Equatable {
 }
 
 class CartProductChanged extends CartEvent {
-  final ProductInfoModel product;
+  final ProductModel product;
   final int count;
   const CartProductChanged(
     this.product,

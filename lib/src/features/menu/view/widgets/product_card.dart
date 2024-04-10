@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
-import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductCard extends StatefulWidget {
-  final ProductInfoModel product;
+  final ProductModel product;
 
   const ProductCard({super.key, required this.product});
 

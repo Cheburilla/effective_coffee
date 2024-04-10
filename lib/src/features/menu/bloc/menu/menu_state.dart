@@ -10,7 +10,7 @@ enum MenuStatus {
 final class MenuState extends Equatable {
   final MenuStatus status = MenuStatus.idle;
   final List<CategoryModel> categories;
-  final List<ProductInfoModel> items;
+  final List<ProductModel> items;
 
   const MenuState({
     required this.categories,
@@ -20,7 +20,7 @@ final class MenuState extends Equatable {
 
   MenuState copyWith({
     List<CategoryModel>? categories,
-    List<ProductInfoModel>? items,
+    List<ProductModel>? items,
     MenuStatus? status,
   }) {
     return MenuState(

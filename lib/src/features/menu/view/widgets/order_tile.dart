@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class OrderTile extends StatelessWidget {
   const OrderTile({super.key, required this.product});
-  final ProductInfoModel product;
+  final ProductModel product;
   @override
   Widget build(BuildContext context) {
     return ListTile(
