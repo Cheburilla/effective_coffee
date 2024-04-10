@@ -18,7 +18,7 @@ class CategorySection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Text(
-            category.categoryName,
+            category.slug,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

@@ -1,9 +1,9 @@
 class CategoryModel {
-  final String categoryName;
+  final String slug;
   final int id;
 
   const CategoryModel({
-    required this.categoryName,
+    required this.slug,
     required this.id,
   });
 }

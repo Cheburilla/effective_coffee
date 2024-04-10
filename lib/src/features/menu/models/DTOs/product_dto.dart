@@ -5,6 +5,7 @@ class ProductDTO {
   final String name;
   final double price;
   final String imageUrl;
+  final String description;
   final CategoryDTO category;
 
   const ProductDTO({
@@ -13,6 +14,7 @@ class ProductDTO {
     required this.price,
     required this.imageUrl,
     required this.category,
+    required this.description,
   });
 
   factory ProductDTO.fromJSON(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class ProductDTO {
       id: json['id'],
       imageUrl: json['imageUrl'],
       name: json['name'],
+      description: json['description'],
       price: double.parse(
         prices.first is! Map<String, dynamic>
             ? throw const FormatException()

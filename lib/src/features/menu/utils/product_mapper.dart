@@ -8,6 +8,7 @@ extension ProductMapper on ProductDTO {
         name: name,
         price: price,
         imagePath: imageUrl,
+        description: description,
         category: category.toModel(),
       );
 }

@@ -6,6 +6,7 @@ class ProductModel {
   final double price;
   final String imagePath;
   final CategoryModel category;
+  final String description;
 
   const ProductModel({
     required this.id,
@@ -13,5 +14,6 @@ class ProductModel {
     required this.price,
     required this.imagePath,
     required this.category,
+    required this.description,
   });
 }

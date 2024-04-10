@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:effective_coffee/src/common/database/database.dart';
 import 'package:effective_coffee/src/features/menu/bloc/base_observer.dart';
 import 'package:effective_coffee/src/features/menu/data/category_repository.dart';
 import 'package:effective_coffee/src/features/menu/data/data_sources/categories_data_source.dart';
@@ -16,30 +17,25 @@ import 'package:effective_coffee/src/app.dart';
 
 void main() {
   Bloc.observer = const BaseObserver();
-  final dioClient = Dio();
-  final networkCategoriesDataSource =
-      NetworkCategoriesDataSource(dio: dioClient);
-  final dbCategoriesDataSource = DbCategoriesDataSource();
-  final networkProductsDataSource = NetworkProductsDataSource(dio: dioClient);
-  final dbProductsDataSource = DbProductsDataSource();
-  final networkOrdersDataSource = NetworkOrdersDataSource(dio: dioClient);
-  final productsRepository = ProductsRepository(
-    networkProductsDataSource: networkProductsDataSource,
-    dbProductsDataSource: dbProductsDataSource,
-  );
-  final categoriesRepository = CategoriesRepository(
-      networkCategoriesDataSource: networkCategoriesDataSource,
-      dbCategoriesDataSource: dbCategoriesDataSource);
-  final orderRepository =
-      OrderRepository(networkOrderDataSource: networkOrdersDataSource);
+  final dioClient = Dio(BaseOptions(baseUrl: const String.fromEnvironment("BASEURL")));
+  final db = AppDatabase();
+
   runZonedGuarded(
       () => runApp(MultiRepositoryProvider(providers: [
             RepositoryProvider<OrderRepository>(
-                create: (context) => orderRepository),
+                create: (context) => OrderRepository(
+                    networkOrderDataSource:
+                        NetworkOrdersDataSource(dio: dioClient))),
             RepositoryProvider<CategoriesRepository>(
-                create: (context) => categoriesRepository),
+                create: (context) => CategoriesRepository(
+                    networkCategoriesDataSource:
+                        NetworkCategoriesDataSource(dio: dioClient),
+                    dbCategoriesDataSource: DbCategoriesDataSource(db: db))),
             RepositoryProvider<ProductsRepository>(
-                create: (context) => productsRepository),
+                create: (context) => ProductsRepository(
+                    networkProductsDataSource:
+                        NetworkProductsDataSource(dio: dioClient),
+                    dbProductsDataSource: DbProductsDataSource(db: db))),
           ], child: const CoffeeShopApp())), (error, stack) {
     log(error.toString(), name: 'App Error', stackTrace: stack);
   });
