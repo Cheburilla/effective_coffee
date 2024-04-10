@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:effective_coffee/src/common/network/api_exception.dart';
 import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 
 abstract interface class IOrderDataSource {
@@ -24,7 +24,7 @@ final class NetworkOrdersDataSource implements IOrderDataSource {
     if (response.statusCode == 201) {
       return response.data;
     } else {
-      throw UnknownException();
+      throw const HttpException('/orders');
     }
   }
 }

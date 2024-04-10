@@ -19,9 +19,9 @@ final class NetworkProductsDataSource implements IProductsDataSource {
       {required int categoryId, int page = 0, int limit = 25}) async {
     try {
       final response = await _dio.get('/products', queryParameters: {
-        'page': page,
-        'limit': limit,
-        'category': categoryId
+        'page': '$page',
+        'limit': '$limit',
+        'category': '$categoryId'
       });
       switch (response.statusCode) {
         case 200:
@@ -33,7 +33,7 @@ final class NetworkProductsDataSource implements IProductsDataSource {
               )
               .toList();
         default:
-          throw const HttpException('/products');
+          throw HttpException('/products with categoryId = $categoryId');
       }
     } on SocketException {
       rethrow;
