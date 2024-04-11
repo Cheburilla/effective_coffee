@@ -35,7 +35,10 @@ final class NetworkProductsDataSource implements IProductsDataSource {
         default:
           throw HttpException('/products with categoryId = $categoryId');
       }
-    } on SocketException {
+    } on DioException catch (_) {
+      if (_.type == DioExceptionType.connectionError) {
+        throw SocketException('/products with categoryId = $categoryId');
+      }
       rethrow;
     }
   }
@@ -51,7 +54,10 @@ final class NetworkProductsDataSource implements IProductsDataSource {
         default:
           throw HttpException('/products/$productId');
       }
-    } on SocketException {
+    } on DioException catch (_) {
+      if (_.type == DioExceptionType.connectionError) {
+        throw SocketException('/products/$productId');
+      }
       rethrow;
     }
   }
