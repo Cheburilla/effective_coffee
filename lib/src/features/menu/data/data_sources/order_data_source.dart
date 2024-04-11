@@ -15,12 +15,11 @@ final class NetworkOrdersDataSource implements IOrderDataSource {
   @override
   Future<Map<String, dynamic>> postOrder(
       {required Map<ProductModel, int> items}) async {
-    final response = await _dio.post('/orders', data: {
-      "positions": items.map(
-        (key, value) => MapEntry(key.id.toString(), value),
-      ),
-      "token": ""
-    });
+    final positions = items.map(
+      (key, value) => MapEntry(key.id.toString(), value),
+    );
+    final response =
+        await _dio.post('/orders', data: {"positions": positions, "token": ""});
     if (response.statusCode == 201) {
       return response.data;
     } else {

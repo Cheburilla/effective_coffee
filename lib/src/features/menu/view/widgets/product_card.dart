@@ -54,7 +54,7 @@ class _ProductCardState extends State<ProductCard> {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: SizedBox(
                     height: 24,
-                    child: state.cartItems.containsKey(widget.product)
+                    child: showQuantityButtons
                         ? Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,12 +68,14 @@ class _ProductCardState extends State<ProductCard> {
                                   child: IconButton(
                                     onPressed: () {
                                       setState(() {
-                                        _quantity--;
+                                        if (_quantity > 0) {
+                                          _quantity--;
+                                          context.read<CartBloc>().add(
+                                                CartProductChanged(
+                                                    widget.product, _quantity),
+                                              );
+                                        }
                                       });
-                                      context.read<CartBloc>().add(
-                                            CartProductChanged(
-                                                widget.product, 0),
-                                          );
                                     },
                                     icon: const Icon(
                                       Icons.remove,

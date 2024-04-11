@@ -21,7 +21,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> _onCartProductChanged(event, emit) async {
     Map<ProductModel, int> items = Map.from(state.cartItems);
     final count = event.count;
-    items[event.product] = count;
+    if (count == 0) {
+      items.remove(event.product);
+    }
+    else {
+      items[event.product] = count;
+    }
     emit(
       state.copyWith(
         cartItems: items,
@@ -32,10 +37,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _onCartOrderPosted(event, emit) async {
     emit(
-        state.copyWith(
-          status: CartStatus.loading,
-        ),
-      );
+      state.copyWith(
+        status: CartStatus.loading,
+      ),
+    );
     Map<ProductModel, int> items = Map.from(
       state.cartItems,
     );
@@ -54,8 +59,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         ),
       );
       rethrow;
-    }
-    finally {
+    } finally {
       emit(
         state.copyWith(
           status: CartStatus.idle,
