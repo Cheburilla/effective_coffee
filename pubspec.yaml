@@ -53,6 +53,7 @@ dependencies:
   sqlite3: ^2.4.2
   location: ^6.0.1
   yandex_mapkit: ^4.0.2
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

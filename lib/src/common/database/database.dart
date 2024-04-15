@@ -22,7 +22,14 @@ class Products extends Table {
   RealColumn get price => real()();
 }
 
-@DriftDatabase(tables: [Categories, Products])
+class Locations extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get address => text()();
+  RealColumn get lat => real()();
+  RealColumn get lng => real()();
+}
+
+@DriftDatabase(tables: [Categories, Products, Locations])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
