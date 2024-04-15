@@ -22,7 +22,7 @@ final class LocationsRepository implements ILocationsRepository {
 
   @override
   Future<List<LocationModel>> loadLocations() async {
-    var dtos = <LocationDTO>[];
+    List<LocationDTO> dtos = <LocationDTO>[];
     try {
       dtos = await _networkLocationsDataSource.fetchLocations();
       _dbLocationsDataSource.saveLocations(locations: dtos);

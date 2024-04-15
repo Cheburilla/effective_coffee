@@ -21,7 +21,7 @@ final class DbLocationsDataSource implements ISavableLocationsDataSource {
 
   @override
   Future<void> saveLocations({required List<LocationDTO> locations}) async {
-    for (var location in locations) {
+    for (LocationDTO location in locations) {
       _db.into(_db.locations).insertOnConflictUpdate(LocationsCompanion.insert(
           address: location.address, lat: location.lat, lng: location.lng));
     }
