@@ -3,6 +3,7 @@ import 'package:effective_coffee/src/features/locations/models/location_model.da
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'map_event.dart';
 part 'map_state.dart';
@@ -17,7 +18,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final ILocationsRepository _locationsRepository;
 
   Future<void> _onMapLocationChanged(MapLocationChanged event, emit) async {
-    var location = event.location;
+    LocationModel location = event.location;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('chosenAddress', location.address);
     emit(
       state.copyWith(currentLocation: location),
     );
@@ -28,13 +31,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       state.copyWith(status: MapStatus.loading),
     );
     try {
-      final locations = await _locationsRepository.loadLocations();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final List<LocationModel> locations = await _locationsRepository.loadLocations();
+      final chosenAddress = prefs.getString('chosenAddress');
+      LocationModel currentLocation = chosenAddress == null ? locations.first : locations.where((l) => l.address == chosenAddress).single;
+      prefs.setString('chosenAddress', currentLocation.address);
       emit(
-        state.copyWith(locations: locations, status: MapStatus.idle, currentLocation: locations.first),
+        state.copyWith(
+            locations: locations,
+            status: MapStatus.idle,
+            currentLocation: currentLocation),
       );
-      /*add(
-        const PageLoadingStarted(), there can be an event to load current location from shared or adding first location from locations
-      );*/
     } on Object {
       emit(
         state.copyWith(status: MapStatus.error),
