@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:effective_coffee/src/features/menu/models/DTOs/location_dto.dart';
+import 'package:effective_coffee/src/features/locations/models/DTOs/location_dto.dart';
 
 abstract interface class ILocationsDataSource {
   Future<List<LocationDTO>> fetchLocations();

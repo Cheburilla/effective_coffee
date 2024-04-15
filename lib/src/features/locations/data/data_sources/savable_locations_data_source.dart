@@ -1,6 +1,6 @@
 import 'package:effective_coffee/src/common/database/database.dart';
-import 'package:effective_coffee/src/features/menu/data/data_sources/locations_data_source.dart';
-import 'package:effective_coffee/src/features/menu/models/DTOs/location_dto.dart';
+import 'package:effective_coffee/src/features/locations/data/data_sources/locations_data_source.dart';
+import 'package:effective_coffee/src/features/locations/models/DTOs/location_dto.dart';
 
 abstract interface class ISavableLocationsDataSource
     implements ILocationsDataSource {

@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:effective_coffee/src/features/menu/data/data_sources/locations_data_source.dart';
-import 'package:effective_coffee/src/features/menu/data/data_sources/savable_locations_data_source.dart';
-import 'package:effective_coffee/src/features/menu/models/DTOs/location_dto.dart';
-import 'package:effective_coffee/src/features/menu/models/location_model.dart';
-import 'package:effective_coffee/src/features/menu/utils/location_mapper.dart';
+import 'package:effective_coffee/src/features/locations/data/data_sources/locations_data_source.dart';
+import 'package:effective_coffee/src/features/locations/data/data_sources/savable_locations_data_source.dart';
+import 'package:effective_coffee/src/features/locations/models/DTOs/location_dto.dart';
+import 'package:effective_coffee/src/features/locations/models/location_model.dart';
+import 'package:effective_coffee/src/features/locations/utils/location_mapper.dart';
 
 abstract interface class ILocationsRepository {
   Future<List<LocationModel>> loadLocations();
