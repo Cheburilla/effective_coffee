@@ -12,38 +12,29 @@ class LocationBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox( //TODO: remake
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
-      ),
+    return SizedBox(
+      height: 142,
       child: Padding(
         padding: const EdgeInsets.only(
-          //top: 18,
-          bottom: 10,
+          bottom: 24,
           left: 10,
           right: 10,
         ),
-        child: ColoredBox(
-          color: AppColors.white,
-          child: Column(
-            children: [
-              SizedBox(
-                width: Theme.of(context).bottomSheetTheme.dragHandleSize?.width,
-                height:
-                    Theme.of(context).bottomSheetTheme.dragHandleSize?.height,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).bottomSheetTheme.dragHandleColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 52,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  location.address,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(location.address),
-              ElevatedButton(
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: ElevatedButton(
                 onPressed: () {
                   context.read<MapBloc>().add(MapLocationChanged(location));
                   Navigator.of(context)
@@ -51,18 +42,20 @@ class LocationBottomSheet extends StatelessWidget {
                     ..pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.maxFinite, 56),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+                    minimumSize: const Size(double.maxFinite, 56),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16))),
                 child: Text(
                   AppLocalizations.of(context)!.choose,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: AppColors.white,
+                        letterSpacing: 0.4,
                       ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

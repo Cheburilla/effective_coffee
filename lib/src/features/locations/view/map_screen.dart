@@ -28,6 +28,17 @@ class _MapScreenState extends State<MapScreen> {
       body: YandexMap(
         onMapCreated: (controller) async {
           _mapController = controller;
+          _mapController.moveCamera(
+            CameraUpdate.newCameraPosition(
+              const CameraPosition(
+                target: Point(
+                  latitude: 54.98,
+                  longitude: 73.36,
+                ),
+                zoom: 10,
+              ),
+            ),
+          );
           await _initLocationLayer();
         },
         mapObjects: _getPlacemarkObjects(context),
@@ -58,7 +69,8 @@ class _MapScreenState extends State<MapScreen> {
             FloatingActionButton.small(
               onPressed: () => Navigator.pop(context),
               backgroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               heroTag: "btn1",
               child: const Icon(
                 Icons.arrow_back,
@@ -69,7 +81,8 @@ class _MapScreenState extends State<MapScreen> {
             FloatingActionButton.small(
               onPressed: () => _navigateToLocationList(context),
               backgroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               heroTag: "btn2",
               child: const Icon(
                 Icons.map_outlined,
@@ -119,6 +132,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               onTap: (_, __) => showModalBottomSheet(
                 context: context,
+                showDragHandle: true,
                 builder: (___) => BlocProvider.value(
                   value: context.read<MapBloc>(),
                   child: LocationBottomSheet(
