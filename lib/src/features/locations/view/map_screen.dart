@@ -130,16 +130,33 @@ class _MapScreenState extends State<MapScreen> {
                   scale: 0.1,
                 ),
               ),
-              onTap: (_, __) => showModalBottomSheet(
-                context: context,
-                showDragHandle: true,
-                builder: (___) => BlocProvider.value(
-                  value: context.read<MapBloc>(),
-                  child: LocationBottomSheet(
-                    location: point,
+              onTap: (_, __) => {
+                _mapController.moveCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: Point(
+                        latitude: point.lat,
+                        longitude: point.lng,
+                      ),
+                      zoom: 15,
+                    ),
+                  ),
+                  animation: const MapAnimation(
+                    type: MapAnimationType.linear,
+                    duration: 0.3,
                   ),
                 ),
-              ),
+                showModalBottomSheet(
+                  context: context,
+                  showDragHandle: true,
+                  builder: (___) => BlocProvider.value(
+                    value: context.read<MapBloc>(),
+                    child: LocationBottomSheet(
+                      location: point,
+                    ),
+                  ),
+                )
+              },
             ),
           )
           .toList();
