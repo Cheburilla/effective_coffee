@@ -73,10 +73,10 @@ class _MapScreenState extends State<MapScreen> {
 List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {
   List<LocationModel>? locations = context.read<MapBloc>().state.locations;
   if (locations != null) {
-    return locations
+    var points = locations
         .map(
           (point) => PlacemarkMapObject(
-            mapId: MapObjectId('MapObject $point'),
+            mapId: MapObjectId('MapObject ${point.address}'),
             point: Point(latitude: point.lat, longitude: point.lng),
             opacity: 1,
             icon: PlacemarkIcon.single(
@@ -99,6 +99,7 @@ List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {
           ),
         )
         .toList();
+    return points;
   } else {
     return [];
   }
