@@ -1,3 +1,4 @@
+import 'package:effective_coffee/src/features/locations/view/widgets/location_button.dart';
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:effective_coffee/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/category_section.dart';
@@ -86,52 +87,61 @@ class _MenuScreenState extends State<MenuScreen> {
         if (state.status != MenuStatus.error) {
           return SafeArea(
             child: Scaffold(
-              appBar: AppBar(
-                surfaceTintColor: Colors.transparent,
-                title: PreferredSize(
-                    preferredSize: const Size.fromHeight(
-                      (40),
-                    ),
-                    child: SizedBox(
-                      height: 40,
-                      child: ScrollablePositionedList.builder(
-                        itemScrollController: _appBarController,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.categories.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.read<MenuBloc>().add(
-                                    OneCategoryLoadingStarted(
-                                        state.categories[index]));
-                                setCurrent(index);
-                                menuScrollToCategory(index);
-                                appBarScrollToCategory(index);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: index == current
-                                      ? AppColors.lightblue
-                                      : AppColors.white),
-                              child: Text(
-                                state.categories[index].slug,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                        color: index == current
-                                            ? AppColors.white
-                                            : AppColors.black),
-                              ),
-                            ),
-                          );
-                        },
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight((94)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 40,
+                        child: LocationButton(),
                       ),
-                    )),
+                      const Spacer(),
+                      SizedBox(
+                        height: 36,
+                        child: ScrollablePositionedList.builder(
+                          itemScrollController: _appBarController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.categories.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  context.read<MenuBloc>().add(
+                                      OneCategoryLoadingStarted(
+                                          state.categories[index]));
+                                  setCurrent(index);
+                                  menuScrollToCategory(index);
+                                  appBarScrollToCategory(index);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: index == current
+                                        ? AppColors.lightblue
+                                        : AppColors.white),
+                                child: Text(
+                                  state.categories[index].slug,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                          color: index == current
+                                              ? AppColors.white
+                                              : AppColors.black),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.only(left: 16, right: 20),
                 child: ScrollablePositionedList.builder(
                   itemScrollController: _menuController,
                   itemPositionsListener: itemListener,

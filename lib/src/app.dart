@@ -1,5 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:effective_coffee/src/common/database/database.dart';
+import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/data/data_sources/locations_data_source.dart';
+import 'package:effective_coffee/src/features/locations/data/data_sources/savable_locations_data_source.dart';
+import 'package:effective_coffee/src/features/locations/data/locations_repository.dart';
 import 'package:effective_coffee/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:effective_coffee/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:effective_coffee/src/features/menu/data/category_repository.dart';
@@ -28,6 +32,11 @@ class CoffeeShopApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<ILocationsRepository>(
+            create: (context) => LocationsRepository(
+                networkLocationsDataSource:
+                    NetworkLocationsDataSource(dio: dioClient),
+                dbLocationsDataSource: DbLocationsDataSource(db: db))),
         RepositoryProvider<IOrderRepository>(
             create: (context) => OrderRepository(
                 networkOrderDataSource:
@@ -68,6 +77,10 @@ class CoffeeShopApp extends StatelessWidget {
                   const CategoryLoadingStarted(),
                 ),
             ),
+            BlocProvider(
+                create: (context) =>
+                    MapBloc(context.read<ILocationsRepository>())
+                      ..add(const MapLoadingStarted())),
           ],
           child: const MenuScreen(),
         ),

@@ -12,10 +12,7 @@ class LocationBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return /*SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.91,
-      child:*/
-        DecoratedBox(
+    return DecoratedBox( //TODO: remake
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(18),
@@ -27,43 +24,44 @@ class LocationBottomSheet extends StatelessWidget {
           left: 10,
           right: 10,
         ),
-        child: Scaffold(
-          body: ColoredBox(
-            color: AppColors.white,
-            child: Column(
-              children: [
-                SizedBox(
-                  width:
-                      Theme.of(context).bottomSheetTheme.dragHandleSize?.width,
-                  height:
-                      Theme.of(context).bottomSheetTheme.dragHandleSize?.height,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).bottomSheetTheme.dragHandleColor,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+        child: ColoredBox(
+          color: AppColors.white,
+          child: Column(
+            children: [
+              SizedBox(
+                width: Theme.of(context).bottomSheetTheme.dragHandleSize?.width,
+                height:
+                    Theme.of(context).bottomSheetTheme.dragHandleSize?.height,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).bottomSheetTheme.dragHandleColor,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(location.address),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<MapBloc>().add(MapLocationChanged(location));
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.maxFinite, 56),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<MapBloc>().add(MapLocationChanged(location));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.maxFinite, 56),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.choose,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.white,
-                        ),
-                  ),
+                child: Text(
+                  AppLocalizations.of(context)!.choose,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: AppColors.white,
+                      ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

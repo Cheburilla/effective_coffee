@@ -23,10 +23,12 @@ class Products extends Table {
 }
 
 class Locations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get address => text()();
   RealColumn get lat => real()();
   RealColumn get lng => real()();
+
+  @override
+  Set<Column> get primaryKey => {address};
 }
 
 @DriftDatabase(tables: [Categories, Products, Locations])

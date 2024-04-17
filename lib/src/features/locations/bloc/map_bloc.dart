@@ -1,6 +1,7 @@
 import 'package:effective_coffee/src/features/locations/data/locations_repository.dart';
 import 'package:effective_coffee/src/features/locations/models/location_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,9 +33,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     );
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final List<LocationModel> locations = await _locationsRepository.loadLocations();
+      final List<LocationModel> locations =
+          await _locationsRepository.loadLocations();
       final chosenAddress = prefs.getString('chosenAddress');
-      LocationModel currentLocation = chosenAddress == null ? locations.first : locations.where((l) => l.address == chosenAddress).single;
+      LocationModel currentLocation = chosenAddress == null
+          ? locations.first
+          : locations.where((l) => l.address == chosenAddress).single;
       prefs.setString('chosenAddress', currentLocation.address);
       emit(
         state.copyWith(

@@ -1,5 +1,7 @@
+import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
 import 'package:effective_coffee/src/features/locations/models/location_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -25,17 +27,27 @@ class LocationsList extends StatelessWidget {
           ),
           const Divider(),
           ListView.builder(
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: ListTile(
-            title: Text(locations[index].address,),
-            trailing: const Icon(Icons.arrow_forward_ios),
-          ),
-        );
-      },
-      itemCount: locations.length,
-    )
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: ListTile(
+                  title: Text(
+                    locations[index].address,
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    context.read<MapBloc>().add(
+                          MapLocationChanged(locations[index]),
+                        );
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop();
+                  },
+                ),
+              );
+            },
+            itemCount: locations.length,
+          )
         ],
       ),
     );
