@@ -7,7 +7,14 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    YMKMapKit.setApiKey("ecd3ba7d-ce3f-4d03-8a38-7e23dbec4ad8")
+    let dartDefinesString = Bundle.main.infoDictionary!["DART_DEFINES"] as! String
+var dartDefinesDictionary = [String:String]()
+for definedValue in dartDefinesString.components(separatedBy: ",") {
+    let decoded = String(data: Data(base64Encoded: definedValue)!, encoding: .utf8)!
+    let values = decoded.components(separatedBy: "=")
+    dartDefinesDictionary[values[0]] = values[1]
+}
+    YMKMapKit.setApiKey(dartDefinesDictionary["API_KEY"]!)
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
