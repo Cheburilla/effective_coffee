@@ -1,6 +1,8 @@
 import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
 import 'package:effective_coffee/src/features/locations/models/location_model.dart';
 import 'package:effective_coffee/src/features/locations/view/widgets/location_bottomsheet.dart';
+import 'package:effective_coffee/src/features/locations/view/widgets/locations_list.dart';
+import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:effective_coffee/src/theme/image_sources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,6 +51,35 @@ class _MapScreenState extends State<MapScreen> {
           );
         },
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            FloatingActionButton.small(
+              onPressed: () => Navigator.pop(context),
+              backgroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              heroTag: "btn1",
+              child: const Icon(
+                Icons.arrow_back,
+                size: 20,
+              ),
+            ),
+            const Spacer(),
+            FloatingActionButton.small(
+              onPressed: () => _navigateToLocationList(context),
+              backgroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              heroTag: "btn2",
+              child: const Icon(
+                Icons.map_outlined,
+                size: 20,
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
     );
   }
 
@@ -68,39 +99,54 @@ class _MapScreenState extends State<MapScreen> {
       });
     }
   }
-}
 
-List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {
-  List<LocationModel>? locations = context.read<MapBloc>().state.locations;
-  if (locations != null) {
-    var points = locations
-        .map(
-          (point) => PlacemarkMapObject(
-            mapId: MapObjectId('MapObject ${point.address}'),
-            point: Point(latitude: point.lat, longitude: point.lng),
-            opacity: 1,
-            icon: PlacemarkIcon.single(
-              PlacemarkIconStyle(
-                image: BitmapDescriptor.fromAssetImage(
-                  ImageSources.mapPoint,
-                ),
-                scale: 0.1,
-              ),
-            ),
-            onTap: (_, __) => showModalBottomSheet(
-              context: context,
-              builder: (___) => BlocProvider.value(
-                value: context.read<MapBloc>(),
-                child: LocationBottomSheet(
-                  location: point,
+  List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {
+    List<LocationModel>? locations = context.read<MapBloc>().state.locations;
+    if (locations != null) {
+      var points = locations
+          .map(
+            (point) => PlacemarkMapObject(
+              mapId: MapObjectId('MapObject ${point.address}'),
+              point: Point(latitude: point.lat, longitude: point.lng),
+              opacity: 1,
+              icon: PlacemarkIcon.single(
+                PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                    ImageSources.mapPoint,
+                  ),
+                  scale: 0.1,
                 ),
               ),
+              onTap: (_, __) => showModalBottomSheet(
+                context: context,
+                builder: (___) => BlocProvider.value(
+                  value: context.read<MapBloc>(),
+                  child: LocationBottomSheet(
+                    location: point,
+                  ),
+                ),
+              ),
             ),
+          )
+          .toList();
+      return points;
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> _navigateToLocationList(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: context.read<MapBloc>(),
+          child: LocationsList(
+            locations:
+                context.read<MapBloc>().state.locations ?? <LocationModel>[],
           ),
-        )
-        .toList();
-    return points;
-  } else {
-    return [];
+        ),
+      ),
+    );
   }
 }

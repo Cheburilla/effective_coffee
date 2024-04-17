@@ -12,43 +12,67 @@ class LocationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Row(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
             children: [
-              const Icon(
-                Icons.arrow_back,
-                size: 20,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: SizedBox(
+                  height: 52,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 24),
+                        child: InkWell(
+                          child: const Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                          ),
+                          onTap: () => Navigator.of(context)
+                            ..pop()
+                            ..pop(),
+                        ),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.ourCoffeeshops,
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text(AppLocalizations.of(context)!.ourCoffeeshops),
+              const Divider(),
+              Expanded(
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        title: Text(
+                          locations[index].address,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 20,),
+                        onTap: () {
+                          context.read<MapBloc>().add(
+                                MapLocationChanged(locations[index]),
+                              );
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop();
+                        },
+                      ),
+                    );
+                  },
+                  itemCount: locations.length,
+                ),
+              )
             ],
           ),
-          const Divider(),
-          ListView.builder(
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ListTile(
-                  title: Text(
-                    locations[index].address,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    context.read<MapBloc>().add(
-                          MapLocationChanged(locations[index]),
-                        );
-                    Navigator.of(context)
-                      ..pop()
-                      ..pop();
-                  },
-                ),
-              );
-            },
-            itemCount: locations.length,
-          )
-        ],
+        ),
       ),
     );
   }
