@@ -20,7 +20,11 @@ class _ProductCardState extends State<ProductCard> {
   int _quantity = 0;
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+    return BlocConsumer<CartBloc, CartState>(listener: (context, state) {
+      if (state.status == CartStatus.idle && !state.cartItems.containsKey(widget.product) && _quantity > 0) {
+        _quantity = 0;
+      }
+    }, builder: (context, state) {
       return SizedBox(
         width: 180,
         child: Card(
