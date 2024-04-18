@@ -8,7 +8,7 @@ enum CartStatus {
 }
 
 final class CartState extends Equatable {
-  final Map<ProductInfoModel, int> cartItems;
+  final Map<ProductModel, int> cartItems;
   final CartStatus status;
   final double cost;
 
@@ -20,7 +20,7 @@ final class CartState extends Equatable {
 
   CartState copyWith({
     CartStatus? status,
-    Map<ProductInfoModel, int>? cartItems,
+    Map<ProductModel, int>? cartItems,
     double? cost,
   }) {
     return CartState(

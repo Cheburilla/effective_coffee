@@ -115,7 +115,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       ? AppColors.lightblue
                                       : AppColors.white),
                               child: Text(
-                                state.categories[index].categoryName,
+                                state.categories[index].slug,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium

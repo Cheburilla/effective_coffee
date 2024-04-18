@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:effective_coffee/src/features/menu/data/menu_repository.dart';
+import 'package:effective_coffee/src/features/menu/data/category_repository.dart';
+import 'package:effective_coffee/src/features/menu/data/products_repository.dart';
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
-import 'package:effective_coffee/src/features/menu/models/product_info_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -21,7 +22,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
-  MenuBloc(this._repository)
+  MenuBloc(this._productsRepository, this._categoriesRepository)
       : super(
           const MenuState(status: MenuStatus.idle, items: [], categories: []),
         ) {
@@ -33,7 +34,8 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
   }
 
-  final MenuRepository _repository;
+  final IProductsRepository _productsRepository;
+  final ICategoriesRepository _categoriesRepository;
 
   CategoryModel? _currentPaginatedCategory;
 
@@ -46,7 +48,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
     try {
-      final categories = await _repository.getCategories();
+      final categories = await _categoriesRepository.loadCategories();
       emit(
         state.copyWith(
             categories: categories,
@@ -76,14 +78,14 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
 
   Future<void> _loadProductsFromOneCategory(event, emit) async {
     CategoryModel? currentCategory = event.category;
+    if(currentCategory == null) return;
     emit(
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
-    final List<ProductInfoModel> previousItems =
-          List<ProductInfoModel>.from(state.items);
+    final List<ProductModel> previousItems =
+          List<ProductModel>.from(state.items);
     try {
-
-      final items = await _repository.getProducts(
+      final items = await _productsRepository.loadProducts(
         category: currentCategory,
         limit: _pageLimit,
       );
@@ -121,9 +123,9 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
     try {
-      final List<ProductInfoModel> previousItems =
-          List<ProductInfoModel>.from(state.items);
-      final items = await _repository.getProducts(
+      final List<ProductModel> previousItems =
+          List<ProductModel>.from(state.items);
+      final items = await _productsRepository.loadProducts(
         category: currentCategory,
         page: _currentPage,
         limit: _pageLimit,
