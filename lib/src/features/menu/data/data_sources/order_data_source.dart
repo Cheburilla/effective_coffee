@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 
@@ -22,10 +21,6 @@ final class NetworkOrdersDataSource implements IOrderDataSource {
     );
     final response =
         await _dio.post('/orders', data: {"positions": positions, "token": ""});
-    if (response.statusCode == 201) {
-      return response.data;
-    } else {
-      throw const HttpException('/orders');
-    }
+    return response.data;
   }
 }

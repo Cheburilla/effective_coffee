@@ -15,18 +15,13 @@ final class NetworkLocationsDataSource implements ILocationsDataSource {
   Future<List<LocationDTO>> fetchLocations() async {
     try {
       final response = await _dio.get('/locations');
-      switch (response.statusCode) {
-        case 200:
-          final data = response.data['data'];
-          if (data is! List) throw const FormatException();
-          return (data)
-              .map<LocationDTO>(
-                (i) => LocationDTO.fromJSON(i),
-              )
-              .toList();
-        default:
-          throw const HttpException('/locations');
-      }
+      final data = response.data['data'];
+      if (data is! List) throw const FormatException();
+      return (data)
+          .map<LocationDTO>(
+            (i) => LocationDTO.fromJSON(i),
+          )
+          .toList();
     } on DioException catch (_) {
       if (_.type == DioExceptionType.connectionError) {
         throw const SocketException('/locations');

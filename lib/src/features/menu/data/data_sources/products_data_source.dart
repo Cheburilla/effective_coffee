@@ -32,18 +32,13 @@ final class NetworkProductsDataSource implements IProductsDataSource {
           'category': '$categoryId',
         },
       );
-      switch (response.statusCode) {
-        case 200:
-          final data = response.data['data'];
-          if (data is! List) throw const FormatException();
-          return (data)
-              .map<ProductDTO>(
-                (i) => ProductDTO.fromJSON(i),
-              )
-              .toList();
-        default:
-          throw HttpException('/products with categoryId = $categoryId');
-      }
+      final data = response.data['data'];
+      if (data is! List) throw const FormatException();
+      return (data)
+          .map<ProductDTO>(
+            (i) => ProductDTO.fromJSON(i),
+          )
+          .toList();
     } on DioException catch (_) {
       if (_.type == DioExceptionType.connectionError) {
         throw SocketException('/products with categoryId = $categoryId');
