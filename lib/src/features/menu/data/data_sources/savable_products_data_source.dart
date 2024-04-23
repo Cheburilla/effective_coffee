@@ -15,8 +15,11 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
   const DbProductsDataSource({required AppDatabase db}) : _db = db;
 
   @override
-  Future<List<ProductDTO>> fetchProducts(
-      {required int categoryId, int page = 0, int limit = 25}) async {
+  Future<List<ProductDTO>> fetchProducts({
+    required int categoryId,
+    int page = 0,
+    int limit = 25,
+  }) async {
     List<ProductDTO> data = [];
     int offset = limit * page;
     final products = await (_db.select(_db.products)
@@ -27,13 +30,16 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
       final category = await (_db.select(_db.categories)
             ..where((u) => u.id.equals(product.categoryId)))
           .getSingle();
-      data.add(ProductDTO(
+      data.add(
+        ProductDTO(
           id: product.id,
           name: product.name,
           description: product.description,
           imageUrl: product.imageUrl,
           price: product.price,
-          category: CategoryDTO(id: category.id, slug: category.slug)));
+          category: CategoryDTO(id: category.id, slug: category.slug),
+        ),
+      );
     }
     return data;
   }
@@ -63,11 +69,12 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
           ..where((e) => e.id.equals(product.categoryId)))
         .getSingle();
     return ProductDTO(
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        category: CategoryDTO(id: category.id, slug: category.slug));
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      category: CategoryDTO(id: category.id, slug: category.slug),
+    );
   }
 }

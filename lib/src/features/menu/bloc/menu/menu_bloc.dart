@@ -51,9 +51,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       final categories = await _categoriesRepository.loadCategories();
       emit(
         state.copyWith(
-            categories: categories,
-            items: List.empty(),
-            status: MenuStatus.success),
+          categories: categories,
+          items: List.empty(),
+          status: MenuStatus.success,
+        ),
       );
       add(
         const PageLoadingStarted(),
@@ -61,29 +62,31 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     } on Object {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: state.items,
-            status: MenuStatus.error),
+          categories: state.categories,
+          items: state.items,
+          status: MenuStatus.error,
+        ),
       );
       rethrow;
     } finally {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: state.items,
-            status: MenuStatus.idle),
+          categories: state.categories,
+          items: state.items,
+          status: MenuStatus.idle,
+        ),
       );
     }
   }
 
   Future<void> _loadProductsFromOneCategory(event, emit) async {
     CategoryModel? currentCategory = event.category;
-    if(currentCategory == null) return;
+    if (currentCategory == null) return;
     emit(
       state.copyWith(items: state.items, status: MenuStatus.progress),
     );
     final List<ProductModel> previousItems =
-          List<ProductModel>.from(state.items);
+        List<ProductModel>.from(state.items);
     try {
       final items = await _productsRepository.loadProducts(
         category: currentCategory,
@@ -92,24 +95,27 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       previousItems.addAll(items);
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: previousItems,
-            status: MenuStatus.success),
+          categories: state.categories,
+          items: previousItems,
+          status: MenuStatus.success,
+        ),
       );
     } on Object {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: state.items,
-            status: MenuStatus.error),
+          categories: state.categories,
+          items: state.items,
+          status: MenuStatus.error,
+        ),
       );
       rethrow;
     } finally {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: previousItems,
-            status: MenuStatus.idle),
+          categories: state.categories,
+          items: previousItems,
+          status: MenuStatus.idle,
+        ),
       );
     }
   }
@@ -143,24 +149,27 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       previousItems.addAll(items);
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: previousItems,
-            status: MenuStatus.success),
+          categories: state.categories,
+          items: previousItems,
+          status: MenuStatus.success,
+        ),
       );
     } on Object {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: state.items,
-            status: MenuStatus.error),
+          categories: state.categories,
+          items: state.items,
+          status: MenuStatus.error,
+        ),
       );
       rethrow;
     } finally {
       emit(
         state.copyWith(
-            categories: state.categories,
-            items: state.items,
-            status: MenuStatus.idle),
+          categories: state.categories,
+          items: state.items,
+          status: MenuStatus.idle,
+        ),
       );
     }
   }

@@ -11,47 +11,49 @@ class LocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-      if (state.status == MapStatus.idle) {
-        final currentLocation = state.currentLocation;
-        return SizedBox(
-          height: 40,
-          child: currentLocation != null
-              ? InkWell(
-                  onTap: () => {_navigateToMap(context)},
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        color: AppColors.lightblue,
-                        size: 24,
-                      ),
-                      Text(
-                        currentLocation.address,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+    return BlocBuilder<MapBloc, MapState>(
+      builder: (context, state) {
+        if (state.status == MapStatus.idle) {
+          final currentLocation = state.currentLocation;
+          return SizedBox(
+            height: 40,
+            child: currentLocation != null
+                ? InkWell(
+                    onTap: () => {_navigateToMap(context)},
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.lightblue,
+                          size: 24,
+                        ),
+                        Text(
+                          currentLocation.address,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  )
+                : InkWell(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.lightblue,
+                          size: 24,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.noLocation,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              : InkWell(
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        color: AppColors.lightblue,
-                        size: 24,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.noLocation,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
-        );
-      }
-      return const SizedBox.shrink();
-    });
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Future<void> _navigateToMap(BuildContext context) async {

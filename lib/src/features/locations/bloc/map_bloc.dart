@@ -42,9 +42,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       prefs.setString('chosenAddress', currentLocation.address);
       emit(
         state.copyWith(
-            locations: locations,
-            status: MapStatus.idle,
-            currentLocation: currentLocation),
+          locations: locations,
+          status: MapStatus.idle,
+          currentLocation: currentLocation,
+        ),
       );
     } on Object {
       emit(

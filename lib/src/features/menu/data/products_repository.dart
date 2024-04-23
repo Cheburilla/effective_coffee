@@ -8,8 +8,11 @@ import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:effective_coffee/src/features/menu/utils/product_mapper.dart';
 
 abstract interface class IProductsRepository {
-  Future<List<ProductModel>> loadProducts(
-      {required CategoryModel category, int page = 0, int limit = 25});
+  Future<List<ProductModel>> loadProducts({
+    required CategoryModel category,
+    int page = 0,
+    int limit = 25,
+  });
 }
 
 final class ProductsRepository implements IProductsRepository {
@@ -23,16 +26,25 @@ final class ProductsRepository implements IProductsRepository {
         _dbProductsDataSource = dbProductsDataSource;
 
   @override
-  Future<List<ProductModel>> loadProducts(
-      {required CategoryModel category, int page = 0, int limit = 25}) async {
+  Future<List<ProductModel>> loadProducts({
+    required CategoryModel category,
+    int page = 0,
+    int limit = 25,
+  }) async {
     var dtos = <ProductDTO>[];
     try {
       dtos = await _networkProductsDataSource.fetchProducts(
-          categoryId: category.id, page: page, limit: limit);
+        categoryId: category.id,
+        page: page,
+        limit: limit,
+      );
       _dbProductsDataSource.saveProducts(products: dtos);
     } on SocketException {
       dtos = await _dbProductsDataSource.fetchProducts(
-          categoryId: category.id, page: page, limit: limit);
+        categoryId: category.id,
+        page: page,
+        limit: limit,
+      );
     }
     return dtos.map((e) => e.toModel()).toList();
   }

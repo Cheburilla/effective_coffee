@@ -15,15 +15,22 @@ final class DbLocationsDataSource implements ISavableLocationsDataSource {
   @override
   Future<List<LocationDTO>> fetchLocations() async {
     final result = await (_db.select(_db.locations)).get();
-    return List<LocationDTO>.of(result
-        .map((e) => LocationDTO(address: e.address, lat: e.lat, lng: e.lng)));
+    return List<LocationDTO>.of(
+      result
+          .map((e) => LocationDTO(address: e.address, lat: e.lat, lng: e.lng)),
+    );
   }
 
   @override
   Future<void> saveLocations({required List<LocationDTO> locations}) async {
     for (LocationDTO location in locations) {
-      _db.into(_db.locations).insertOnConflictUpdate(LocationsCompanion.insert(
-          address: location.address, lat: location.lat, lng: location.lng));
+      _db.into(_db.locations).insertOnConflictUpdate(
+            LocationsCompanion.insert(
+              address: location.address,
+              lat: location.lat,
+              lng: location.lng,
+            ),
+          );
     }
   }
 }

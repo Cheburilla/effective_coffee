@@ -10,6 +10,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+const Point _omsk = Point(
+  latitude: 54.98,
+  longitude: 73.36,
+);
+
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
@@ -19,8 +24,14 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late final YandexMapController _mapController;
-
+  late final List<PlacemarkMapObject> _points;
   CameraPosition? _userLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _points = _getPlacemarkObjects(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +42,14 @@ class _MapScreenState extends State<MapScreen> {
           _mapController.moveCamera(
             CameraUpdate.newCameraPosition(
               const CameraPosition(
-                target: Point(
-                  latitude: 54.98,
-                  longitude: 73.36,
-                ),
+                target: _omsk,
                 zoom: 10,
               ),
             ),
           );
           await _initLocationLayer();
         },
-        mapObjects: _getPlacemarkObjects(context),
+        mapObjects: _points,
         onUserLocationAdded: (view) async {
           _userLocation = await _mapController.getUserCameraPosition();
           if (_userLocation != null) {
@@ -70,7 +78,8 @@ class _MapScreenState extends State<MapScreen> {
               onPressed: () => Navigator.pop(context),
               backgroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(8),
+              ),
               heroTag: "btn1",
               child: const Icon(
                 Icons.arrow_back,
@@ -82,13 +91,14 @@ class _MapScreenState extends State<MapScreen> {
               onPressed: () => _navigateToLocationList(context),
               backgroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(8),
+              ),
               heroTag: "btn2",
               child: const Icon(
                 Icons.map_outlined,
                 size: 20,
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -97,7 +107,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _initLocationLayer() async {
-    final locationPermissionIsGranted =
+    final bool locationPermissionIsGranted =
         await Permission.location.request().isGranted;
 
     if (locationPermissionIsGranted) {
@@ -116,7 +126,7 @@ class _MapScreenState extends State<MapScreen> {
   List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {
     List<LocationModel>? locations = context.read<MapBloc>().state.locations;
     if (locations != null) {
-      var points = locations
+      List<PlacemarkMapObject> points = locations
           .map(
             (point) => PlacemarkMapObject(
               mapId: MapObjectId('MapObject ${point.address}'),
@@ -127,6 +137,7 @@ class _MapScreenState extends State<MapScreen> {
                   image: BitmapDescriptor.fromAssetImage(
                     ImageSources.mapPoint,
                   ),
+                  anchor: const Offset(0, -1),
                   scale: 0.1,
                 ),
               ),
@@ -155,7 +166,7 @@ class _MapScreenState extends State<MapScreen> {
                       location: point,
                     ),
                   ),
-                )
+                ),
               },
             ),
           )

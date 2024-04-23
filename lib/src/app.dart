@@ -25,7 +25,8 @@ class CoffeeShopApp extends StatelessWidget {
   const CoffeeShopApp({super.key});
 
   static final dioClient = Dio(
-      BaseOptions(baseUrl: 'https://coffeeshop.academy.effective.band/api/v1'));
+    BaseOptions(baseUrl: 'https://coffeeshop.academy.effective.band/api/v1'),
+  );
   static final db = AppDatabase();
 
   @override
@@ -33,24 +34,31 @@ class CoffeeShopApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<ILocationsRepository>(
-            create: (context) => LocationsRepository(
-                networkLocationsDataSource:
-                    NetworkLocationsDataSource(dio: dioClient),
-                dbLocationsDataSource: DbLocationsDataSource(db: db))),
+          create: (context) => LocationsRepository(
+            networkLocationsDataSource:
+                NetworkLocationsDataSource(dio: dioClient),
+            dbLocationsDataSource: DbLocationsDataSource(db: db),
+          ),
+        ),
         RepositoryProvider<IOrderRepository>(
-            create: (context) => OrderRepository(
-                networkOrderDataSource:
-                    NetworkOrdersDataSource(dio: dioClient))),
+          create: (context) => OrderRepository(
+            networkOrderDataSource: NetworkOrdersDataSource(dio: dioClient),
+          ),
+        ),
         RepositoryProvider<ICategoriesRepository>(
-            create: (context) => CategoriesRepository(
-                networkCategoriesDataSource:
-                    NetworkCategoriesDataSource(dio: dioClient),
-                dbCategoriesDataSource: DbCategoriesDataSource(db: db))),
+          create: (context) => CategoriesRepository(
+            networkCategoriesDataSource:
+                NetworkCategoriesDataSource(dio: dioClient),
+            dbCategoriesDataSource: DbCategoriesDataSource(db: db),
+          ),
+        ),
         RepositoryProvider<IProductsRepository>(
-            create: (context) => ProductsRepository(
-                networkProductsDataSource:
-                    NetworkProductsDataSource(dio: dioClient),
-                dbProductsDataSource: DbProductsDataSource(db: db))),
+          create: (context) => ProductsRepository(
+            networkProductsDataSource:
+                NetworkProductsDataSource(dio: dioClient),
+            dbProductsDataSource: DbProductsDataSource(db: db),
+          ),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -78,9 +86,9 @@ class CoffeeShopApp extends StatelessWidget {
                 ),
             ),
             BlocProvider(
-                create: (context) =>
-                    MapBloc(context.read<ILocationsRepository>())
-                      ..add(const MapLoadingStarted())),
+              create: (context) => MapBloc(context.read<ILocationsRepository>())
+                ..add(const MapLoadingStarted()),
+            ),
           ],
           child: const MenuScreen(),
         ),

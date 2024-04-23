@@ -23,8 +23,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final count = event.count;
     if (count == 0) {
       items.remove(event.product);
-    }
-    else {
+    } else {
       items[event.product] = count;
     }
     emit(

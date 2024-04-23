@@ -18,7 +18,10 @@ class ProductDTO {
   });
 
   factory ProductDTO.fromJSON(Map<String, dynamic> json) {
-    if (json['prices'] is! List<dynamic> || json['category'] is! Map<String, dynamic>) throw const FormatException();
+    if (json['prices'] is! List<dynamic> ||
+        json['category'] is! Map<String, dynamic>) {
+      throw const FormatException();
+    }
     final prices = json['prices'];
     return ProductDTO(
       id: json['id'],

@@ -55,7 +55,10 @@ class LocationsList extends StatelessWidget {
                           locations[index].address,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 20,),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                        ),
                         onTap: () {
                           context.read<MapBloc>().add(
                                 MapLocationChanged(locations[index]),
@@ -69,7 +72,7 @@ class LocationsList extends StatelessWidget {
                   },
                   itemCount: locations.length,
                 ),
-              )
+              ),
             ],
           ),
         ),

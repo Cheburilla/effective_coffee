@@ -111,25 +111,29 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   context.read<MenuBloc>().add(
-                                      OneCategoryLoadingStarted(
-                                          state.categories[index]));
+                                        OneCategoryLoadingStarted(
+                                          state.categories[index],
+                                        ),
+                                      );
                                   setCurrent(index);
                                   menuScrollToCategory(index);
                                   appBarScrollToCategory(index);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: index == current
-                                        ? AppColors.lightblue
-                                        : AppColors.white),
+                                  backgroundColor: index == current
+                                      ? AppColors.lightblue
+                                      : AppColors.white,
+                                ),
                                 child: Text(
                                   state.categories[index].slug,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
                                       ?.copyWith(
-                                          color: index == current
-                                              ? AppColors.white
-                                              : AppColors.black),
+                                        color: index == current
+                                            ? AppColors.white
+                                            : AppColors.black,
+                                      ),
                                 ),
                               ),
                             );

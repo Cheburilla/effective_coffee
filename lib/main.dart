@@ -8,8 +8,7 @@ import 'package:effective_coffee/src/app.dart';
 void main() {
   Bloc.observer = const BaseObserver();
 
-  runZonedGuarded(
-      () => runApp(const CoffeeShopApp()), (error, stack) {
+  runZonedGuarded(() => runApp(const CoffeeShopApp()), (error, stack) {
     log(error.toString(), name: 'App Error', stackTrace: stack);
   });
 }

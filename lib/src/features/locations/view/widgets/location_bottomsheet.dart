@@ -42,10 +42,12 @@ class LocationBottomSheet extends StatelessWidget {
                     ..pop();
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.maxFinite, 56),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16))),
+                  minimumSize: const Size(double.maxFinite, 56),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.choose,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
