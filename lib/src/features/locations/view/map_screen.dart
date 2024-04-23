@@ -137,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
                   image: BitmapDescriptor.fromAssetImage(
                     ImageSources.mapPoint,
                   ),
-                  anchor: const Offset(0, -1),
+                  anchor: const Offset(0.5, 1),
                   scale: 0.1,
                 ),
               ),

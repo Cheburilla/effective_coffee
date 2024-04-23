@@ -36,9 +36,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       final List<LocationModel> locations =
           await _locationsRepository.loadLocations();
       final chosenAddress = prefs.getString('chosenAddress');
-      LocationModel currentLocation = chosenAddress == null
-          ? locations.first
-          : locations.where((l) => l.address == chosenAddress).single;
+      LocationModel currentLocation = locations.firstWhere(
+        (l) => l.address == chosenAddress,
+        orElse: () => locations.first,
+      );
       prefs.setString('chosenAddress', currentLocation.address);
       emit(
         state.copyWith(
