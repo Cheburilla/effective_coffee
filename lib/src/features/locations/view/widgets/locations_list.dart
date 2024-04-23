@@ -64,8 +64,8 @@ class LocationsList extends StatelessWidget {
                                 MapLocationChanged(locations[index]),
                               );
                           Navigator.of(context)
-                            ..pop()
-                            ..pop();
+                            ..pop(locations[index])
+                            ..pop(locations[index]);
                         },
                       ),
                     );

@@ -38,8 +38,8 @@ class LocationBottomSheet extends StatelessWidget {
                 onPressed: () {
                   context.read<MapBloc>().add(MapLocationChanged(location));
                   Navigator.of(context)
-                    ..pop()
-                    ..pop();
+                    ..pop(location)
+                    ..pop(location);
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.maxFinite, 56),
