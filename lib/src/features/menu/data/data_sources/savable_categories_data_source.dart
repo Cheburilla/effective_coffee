@@ -17,7 +17,7 @@ final class DbCategoriesDataSource implements ISavableCategoriesDataSource {
   Future<List<CategoryDTO>> fetchCategories() async {
     final result = await (_db.select(_db.categories)).get();
     return List<CategoryDTO>.of(
-      result.map((e) => CategoryDTO(id: e.id, slug: e.slug)),
+      result.map((category) => CategoryDTO.fromDB(category)),
     );
   }
 

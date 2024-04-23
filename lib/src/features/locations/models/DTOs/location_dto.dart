@@ -1,3 +1,5 @@
+import 'package:effective_coffee/src/common/database/database.dart';
+
 class LocationDTO {
   final String address;
   final double lat;
@@ -14,6 +16,14 @@ class LocationDTO {
       address: json['address'],
       lat: json['lat'],
       lng: json['lng'],
+    );
+  }
+
+  static fromDB(Location location) {
+    return LocationDTO(
+      address: location.address,
+      lat: location.lat,
+      lng: location.lng,
     );
   }
 }

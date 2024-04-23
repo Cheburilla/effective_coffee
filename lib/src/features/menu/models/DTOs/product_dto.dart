@@ -36,4 +36,15 @@ class ProductDTO {
       category: CategoryDTO.fromJSON(json['category']),
     );
   }
+
+  factory ProductDTO.fromDB(product, category) {
+    return ProductDTO(
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      category: CategoryDTO(id: category.id, slug: category.slug),
+    );
+  }
 }

@@ -17,7 +17,7 @@ final class DbLocationsDataSource implements ISavableLocationsDataSource {
     final result = await (_db.select(_db.locations)).get();
     return List<LocationDTO>.of(
       result
-          .map((e) => LocationDTO(address: e.address, lat: e.lat, lng: e.lng)),
+          .map((location) => LocationDTO.fromDB(location)),
     );
   }
 

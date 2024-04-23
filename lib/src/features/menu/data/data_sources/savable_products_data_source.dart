@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:effective_coffee/src/common/database/database.dart';
 import 'package:effective_coffee/src/features/menu/data/data_sources/products_data_source.dart';
-import 'package:effective_coffee/src/features/menu/models/DTOs/category_dto.dart';
 import 'package:effective_coffee/src/features/menu/models/DTOs/product_dto.dart';
 
 abstract interface class ISavableProductsDataSource
@@ -31,13 +30,9 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
             ..where((u) => u.id.equals(product.categoryId)))
           .getSingle();
       data.add(
-        ProductDTO(
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          price: product.price,
-          category: CategoryDTO(id: category.id, slug: category.slug),
+        ProductDTO.fromDB(
+          product,
+          category,
         ),
       );
     }
@@ -68,13 +63,9 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
     final category = await (_db.select(_db.categories)
           ..where((e) => e.id.equals(product.categoryId)))
         .getSingle();
-    return ProductDTO(
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      imageUrl: product.imageUrl,
-      price: product.price,
-      category: CategoryDTO(id: category.id, slug: category.slug),
+    return ProductDTO.fromDB(
+      product,
+      category,
     );
   }
 }
