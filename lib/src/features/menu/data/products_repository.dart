@@ -31,7 +31,7 @@ final class ProductsRepository implements IProductsRepository {
     int page = 0,
     int limit = 25,
   }) async {
-    var dtos = <ProductDTO>[];
+    List<ProductDTO> dtos = <ProductDTO>[];
     try {
       dtos = await _networkProductsDataSource.fetchProducts(
         categoryId: category.id,

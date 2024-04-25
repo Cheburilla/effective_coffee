@@ -1,4 +1,5 @@
-import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/map/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/permissions/permissions_bloc.dart';
 import 'package:effective_coffee/src/features/locations/models/location_model.dart';
 import 'package:effective_coffee/src/features/locations/view/widgets/location_bottomsheet.dart';
 import 'package:effective_coffee/src/features/locations/view/widgets/locations_list.dart';
@@ -35,92 +36,92 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: YandexMap(
-        onMapCreated: (controller) async {
-          _mapController = controller;
-          _mapController.moveCamera(
-            CameraUpdate.newCameraPosition(
-              const CameraPosition(
-                target: _omsk,
-                zoom: 10,
-              ),
-            ),
-          );
-          await _initLocationLayer();
-        },
-        mapObjects: _points,
-        onUserLocationAdded: (view) async {
-          _userLocation = await _mapController.getUserCameraPosition();
-          if (_userLocation != null) {
-            await _mapController.moveCamera(
+    return BlocBuilder<PermissionsBloc, PermissionsState>(
+        builder: (context, state) {
+      return Scaffold(
+        body: YandexMap(
+          onMapCreated: (controller) async {
+            _mapController = controller;
+            _mapController.moveCamera(
               CameraUpdate.newCameraPosition(
-                _userLocation!.copyWith(zoom: 15),
-              ),
-              animation: const MapAnimation(
-                type: MapAnimationType.linear,
-                duration: 0.3,
+                const CameraPosition(
+                  target: _omsk,
+                  zoom: 10,
+                ),
               ),
             );
-          }
-          return view.copyWith(
-            pin: view.pin.copyWith(
-              opacity: 1,
-            ),
-          );
-        },
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            FloatingActionButton.small(
-              onPressed: () => Navigator.pop(context),
-              backgroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+            if (state.permissionStore.containsKey(Permission.location)) {
+              if (state.permissionStore[Permission.location] ==
+                  PermissionStatus.granted) {
+                await _mapController.toggleUserLayer(visible: true);
+              } else {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          AppLocalizations.of(context)!.noLocationPermission),
+                    ),
+                  );
+                });
+              }
+            }
+          },
+          mapObjects: _points,
+          onUserLocationAdded: (view) async {
+            _userLocation = await _mapController.getUserCameraPosition();
+            if (_userLocation != null) {
+              await _mapController.moveCamera(
+                CameraUpdate.newCameraPosition(
+                  _userLocation!.copyWith(zoom: 15),
+                ),
+                animation: const MapAnimation(
+                  type: MapAnimationType.linear,
+                  duration: 0.3,
+                ),
+              );
+            }
+            return view.copyWith(
+              pin: view.pin.copyWith(
+                opacity: 1,
               ),
-              heroTag: "btn1",
-              child: const Icon(
-                Icons.arrow_back,
-                size: 20,
-              ),
-            ),
-            const Spacer(),
-            FloatingActionButton.small(
-              onPressed: () => _navigateToLocationList(context),
-              backgroundColor: AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              heroTag: "btn2",
-              child: const Icon(
-                Icons.map_outlined,
-                size: 20,
-              ),
-            ),
-          ],
+            );
+          },
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
-    );
-  }
-
-  Future<void> _initLocationLayer() async {
-    final bool locationPermissionIsGranted =
-        await Permission.location.request().isGranted;
-
-    if (locationPermissionIsGranted) {
-      await _mapController.toggleUserLayer(visible: true);
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.noLocationPermission),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              FloatingActionButton.small(
+                onPressed: () => Navigator.pop(context),
+                backgroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                heroTag: "btn1",
+                child: const Icon(
+                  Icons.arrow_back,
+                  size: 20,
+                ),
+              ),
+              const Spacer(),
+              FloatingActionButton.small(
+                onPressed: () => _navigateToLocationList(context),
+                backgroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                heroTag: "btn2",
+                child: const Icon(
+                  Icons.map_outlined,
+                  size: 20,
+                ),
+              ),
+            ],
           ),
-        );
-      });
-    }
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+      );
+    });
   }
 
   List<PlacemarkMapObject> _getPlacemarkObjects(BuildContext context) {

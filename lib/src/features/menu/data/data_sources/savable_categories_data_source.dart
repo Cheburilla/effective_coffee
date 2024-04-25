@@ -23,7 +23,7 @@ final class DbCategoriesDataSource implements ISavableCategoriesDataSource {
 
   @override
   Future<void> saveCategories({required List<CategoryDTO> categories}) async {
-    for (var category in categories) {
+    for (CategoryDTO category in categories) {
       _db.into(_db.categories).insertOnConflictUpdate(
             CategoriesCompanion.insert(
               id: Value(category.id),

@@ -41,7 +41,7 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
 
   @override
   Future<void> saveProducts({required List<ProductDTO> products}) async {
-    for (var product in products) {
+    for (ProductDTO product in products) {
       _db.into(_db.products).insertOnConflictUpdate(
             ProductsCompanion.insert(
               id: Value(product.id),

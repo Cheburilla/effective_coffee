@@ -79,7 +79,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   double _costsCounter(Map<ProductModel, int> products) {
     double costs = 0;
-    for (var product in products.entries) {
+    for (MapEntry<ProductModel, int> product in products.entries) {
       costs += product.key.price * product.value;
     }
     return costs;

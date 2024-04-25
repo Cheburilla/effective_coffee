@@ -1,4 +1,4 @@
-import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/map/map_bloc.dart';
 import 'package:effective_coffee/src/features/locations/models/location_model.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';

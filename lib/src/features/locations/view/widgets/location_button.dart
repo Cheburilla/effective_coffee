@@ -1,4 +1,5 @@
-import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/map/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/permissions/permissions_bloc.dart';
 import 'package:effective_coffee/src/features/locations/view/map_screen.dart';
 import 'package:effective_coffee/src/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,10 @@ class LocationButton extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => BlocProvider.value(
           value: context.read<MapBloc>(),
-          child: const MapScreen(),
+          child: BlocProvider.value(
+            value: context.read<PermissionsBloc>(),
+            child: const MapScreen(),
+          ),
         ),
       ),
     );

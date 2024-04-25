@@ -22,7 +22,7 @@ final class CategoriesRepository implements ICategoriesRepository {
 
   @override
   Future<List<CategoryModel>> loadCategories() async {
-    var dtos = <CategoryDTO>[];
+  List<CategoryDTO> dtos = <CategoryDTO>[];
     try {
       dtos = await _networkCategoriesDataSource.fetchCategories();
       _dbCategoriesDataSource.saveCategories(categories: dtos);

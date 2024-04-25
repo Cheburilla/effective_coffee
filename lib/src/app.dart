@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:effective_coffee/src/common/database/database.dart';
-import 'package:effective_coffee/src/features/locations/bloc/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/map/map_bloc.dart';
+import 'package:effective_coffee/src/features/locations/bloc/permissions/permissions_bloc.dart';
 import 'package:effective_coffee/src/features/locations/data/data_sources/locations_data_source.dart';
 import 'package:effective_coffee/src/features/locations/data/data_sources/savable_locations_data_source.dart';
 import 'package:effective_coffee/src/features/locations/data/locations_repository.dart';
@@ -20,6 +21,7 @@ import 'package:effective_coffee/src/theme/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CoffeeShopApp extends StatelessWidget {
   const CoffeeShopApp({super.key});
@@ -76,6 +78,10 @@ class CoffeeShopApp extends StatelessWidget {
               create: (context) => CartBloc(
                 context.read<IOrderRepository>(),
               ),
+            ),
+            BlocProvider(
+              create: (context) => PermissionsBloc()..add(const PermissionRequested(Permission.location)),
+              lazy: false,
             ),
             BlocProvider(
               create: (context) => MenuBloc(
