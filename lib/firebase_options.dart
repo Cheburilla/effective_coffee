@@ -51,11 +51,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBwQhLkkTVLncZZsM9CuMp3nKh0UiXHLT8',
-    appId: '1:153214160023:android:ef8ec578be0412a30eadd2',
-    messagingSenderId: '153214160023',
-    projectId: 'effective-coffee',
-    storageBucket: 'effective-coffee.appspot.com',
+    apiKey: 'AIzaSyD05NQTa24OElt7xbSyzK3AsF1qCXgH5eg',
+    appId: '1:682223097542:android:6608623c36e3caf0dda9c7',
+    messagingSenderId: '682223097542',
+    projectId: 'cooffeeshop-flutter-academy',
+    storageBucket: 'cooffeeshop-flutter-academy.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'effective-coffee.appspot.com',
     measurementId: 'G-DLEG6NSJ22',
   );
-
 }
