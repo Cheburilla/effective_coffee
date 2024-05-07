@@ -17,12 +17,12 @@ final class CategoriesRepository implements ICategoriesRepository {
   const CategoriesRepository({
     required ICategoriesDataSource networkCategoriesDataSource,
     required ISavableCategoriesDataSource dbCategoriesDataSource,
-  }) : _networkCategoriesDataSource = networkCategoriesDataSource,
-      _dbCategoriesDataSource = dbCategoriesDataSource;
+  })  : _networkCategoriesDataSource = networkCategoriesDataSource,
+        _dbCategoriesDataSource = dbCategoriesDataSource;
 
   @override
   Future<List<CategoryModel>> loadCategories() async {
-    var dtos = <CategoryDTO>[];
+  List<CategoryDTO> dtos = <CategoryDTO>[];
     try {
       dtos = await _networkCategoriesDataSource.fetchCategories();
       _dbCategoriesDataSource.saveCategories(categories: dtos);

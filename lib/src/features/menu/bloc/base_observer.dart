@@ -22,13 +22,26 @@ class BaseObserver extends BlocObserver {
     Bloc<dynamic, dynamic> bloc,
     Transition<dynamic, dynamic> transition,
   ) {
-    super.onTransition(bloc, transition,);
+    super.onTransition(
+      bloc,
+      transition,
+    );
     log('onTransition $transition');
   }
 
   @override
-  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace,) {
-    super.onError(bloc, error, stackTrace,);
-    log('onError $error',);
+  void onError(
+    BlocBase<dynamic> bloc,
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    super.onError(
+      bloc,
+      error,
+      stackTrace,
+    );
+    log(
+      'onError $error',
+    );
   }
 }

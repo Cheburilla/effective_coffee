@@ -23,8 +23,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final count = event.count;
     if (count == 0) {
       items.remove(event.product);
-    }
-    else {
+    } else {
       items[event.product] = count;
     }
     emit(
@@ -80,7 +79,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   double _costsCounter(Map<ProductModel, int> products) {
     double costs = 0;
-    for (var product in products.entries) {
+    for (MapEntry<ProductModel, int> product in products.entries) {
       costs += product.key.price * product.value;
     }
     return costs;

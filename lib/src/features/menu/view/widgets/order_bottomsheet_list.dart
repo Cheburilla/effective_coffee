@@ -16,8 +16,8 @@ class _OrderBottomSheetListState extends State<OrderBottomSheetList> {
   @override
   void initState() {
     super.initState();
-    for (var element in widget.products.entries) {
-      for (var i = 0; i < element.value; i++) {
+    for (MapEntry<ProductModel, int> element in widget.products.entries) {
+      for (int i = 0; i < element.value; i++) {
         orderList.add(element.key);
       }
     }

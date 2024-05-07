@@ -18,7 +18,10 @@ class ProductDTO {
   });
 
   factory ProductDTO.fromJSON(Map<String, dynamic> json) {
-    if (json['prices'] is! List<dynamic> || json['category'] is! Map<String, dynamic>) throw const FormatException();
+    if (json['prices'] is! List<dynamic> ||
+        json['category'] is! Map<String, dynamic>) {
+      throw const FormatException();
+    }
     final prices = json['prices'];
     return ProductDTO(
       id: json['id'],
@@ -31,6 +34,17 @@ class ProductDTO {
             : prices.first['value'].toString(),
       ),
       category: CategoryDTO.fromJSON(json['category']),
+    );
+  }
+
+  factory ProductDTO.fromDB(product, category) {
+    return ProductDTO(
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      category: CategoryDTO(id: category.id, slug: category.slug),
     );
   }
 }

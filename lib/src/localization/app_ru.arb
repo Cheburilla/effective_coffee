@@ -3,5 +3,9 @@
     "orderSuccess": "Заказ создан",
     "orderFailure": "Возникла ошибка при заказе",
     "yourOrder": "Ваш заказ",
-    "makeOrder": "Оформить заказ"
+    "makeOrder": "Оформить заказ",
+    "choose": "Выбрать",
+    "ourCoffeeshops": "Наши кофейни",
+    "noLocation": "Локация не определена",
+    "noLocationPermission": "Нет доступа к геолокации"
 }

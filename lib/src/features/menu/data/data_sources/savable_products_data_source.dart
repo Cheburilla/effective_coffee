@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:effective_coffee/src/common/database/database.dart';
 import 'package:effective_coffee/src/features/menu/data/data_sources/products_data_source.dart';
-import 'package:effective_coffee/src/features/menu/models/DTOs/category_dto.dart';
 import 'package:effective_coffee/src/features/menu/models/DTOs/product_dto.dart';
 
 abstract interface class ISavableProductsDataSource
@@ -15,8 +14,11 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
   const DbProductsDataSource({required AppDatabase db}) : _db = db;
 
   @override
-  Future<List<ProductDTO>> fetchProducts(
-      {required int categoryId, int page = 0, int limit = 25}) async {
+  Future<List<ProductDTO>> fetchProducts({
+    required int categoryId,
+    int page = 0,
+    int limit = 25,
+  }) async {
     List<ProductDTO> data = [];
     int offset = limit * page;
     final products = await (_db.select(_db.products)
@@ -27,20 +29,19 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
       final category = await (_db.select(_db.categories)
             ..where((u) => u.id.equals(product.categoryId)))
           .getSingle();
-      data.add(ProductDTO(
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          price: product.price,
-          category: CategoryDTO(id: category.id, slug: category.slug)));
+      data.add(
+        ProductDTO.fromDB(
+          product,
+          category,
+        ),
+      );
     }
     return data;
   }
 
   @override
   Future<void> saveProducts({required List<ProductDTO> products}) async {
-    for (var product in products) {
+    for (ProductDTO product in products) {
       _db.into(_db.products).insertOnConflictUpdate(
             ProductsCompanion.insert(
               id: Value(product.id),
@@ -62,12 +63,9 @@ final class DbProductsDataSource implements ISavableProductsDataSource {
     final category = await (_db.select(_db.categories)
           ..where((e) => e.id.equals(product.categoryId)))
         .getSingle();
-    return ProductDTO(
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        category: CategoryDTO(id: category.id, slug: category.slug));
+    return ProductDTO.fromDB(
+      product,
+      category,
+    );
   }
 }
