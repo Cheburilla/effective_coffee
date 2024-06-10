@@ -22,7 +22,7 @@ Android min SDK version 21 and ext.kotlin.version 1.9.10
 
 ## Startup
 
-Clone repo, then flutter run --dart-define API_KEY=<your_api_key>, where your_api_key is Yandex Maps API key for YandexMapKit.
+Clone repo, add your google-services.json, then flutter run --dart-define API_KEY=<your_api_key>, where your_api_key is Yandex Maps API key for YandexMapKit.
 
 ## Screenshots
 
