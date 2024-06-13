@@ -44,3 +44,6 @@ app.*.map.json
 
 # Google Services keys
 google-services.json
+
+Other keys
+key.*
