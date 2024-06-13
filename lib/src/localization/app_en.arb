@@ -1,0 +1,11 @@
+{
+    "title": "CoffeeShop",
+    "orderSuccess": "Order created",
+    "orderFailure": "An error occurred when ordering",
+    "yourOrder": "Your order",
+    "makeOrder": "Checkout",
+    "choose": "Choose",
+    "ourCoffeeshops": "Our CoffeeShops",
+    "noLocation": "Location isn't defined",
+    "noLocationPermission": "No geolocation access"
+}

@@ -1,11 +1,16 @@
 import 'package:effective_coffee/src/features/menu/models/category_model.dart';
+import 'package:effective_coffee/src/features/menu/models/product_model.dart';
 import 'package:effective_coffee/src/features/menu/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
   final CategoryModel category;
-
-  const CategorySection({super.key, required this.category});
+  final List<ProductModel> products;
+  const CategorySection({
+    super.key,
+    required this.products,
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class CategorySection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Text(
-            category.categoryName,
+            category.slug,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -29,9 +34,9 @@ class CategorySection extends StatelessWidget {
             crossAxisSpacing: 16.0,
             mainAxisExtent: 196,
           ),
-          itemCount: category.products.length,
+          itemCount: products.length,
           itemBuilder: (context, index) {
-            return ProductCard(product: category.products[index]);
+            return ProductCard(product: products[index]);
           },
         ),
       ],
